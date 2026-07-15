@@ -38,8 +38,17 @@
 #include "uart.h"
 #include "key.h"
 #include "bujin.h"
+#include "bujin2.h"
+#include "key2.h"
+
+/* 电机1协议帧缓冲区（通过UART2: PA21/PA22发送） */
 uint8_t DCC_v1_2[50]={0};
+
+/* 电机2协议帧缓冲区（通过UART1: PB6/PB7发送） */
+uint8_t DCC_v1_3[50]={0};
+
 extern volatile uint8_t motor_trigger;
+extern volatile uint8_t motor2_trigger;
 int main(void)
 {
     SYSCFG_DL_init();
@@ -48,9 +57,11 @@ int main(void)
     OLED_DisplayTurn(0);//0正常显示 1 屏幕翻转显示
     OLED_Clear();
     key6_init();
+    key7_init();
     NVIC_EnableIRQ(PRINT_INST_INT_IRQN);
     while (1) {
         // OLED_Refresh();
+        /* 电机1协议帧头预填充（UART2: PA21/PA22） */
         DCC_v1_2[0]=0xAA;
         DCC_v1_2[1]=0x55;
         DCC_v1_2[2]=0x01;
@@ -59,29 +70,26 @@ int main(void)
         DCC_v1_2[5]=0x01;
         DCC_v1_2[6]=0x00;
         DCC_v1_2[7]=0x00;
-        //16634/4        8
-        // DCC_v1_2[8]=(16384/4)&0xFF;
-        // DCC_v1_2[9]=((16384/4)>>8)&0xFF;
-        //校验值
-        // uint8_t check_sum=0;
-        // for(int i=2;i<10;i++)
-        // {
-        //     check_sum+=DCC_v1_2[i];
-        // }
-        
-        // DCC_v1_2[10]=check_sum;
-        // uint8_t key_6=get_key_state(anjian6_PORT,anjian6_PIN_0_PIN);
-        // if(key_6==1)
-        // {
-        //     dianji_roll(30);
-        // }
-        // key_read();
-        // dianji_roll(30);
-        // delay_ms(3000);
+        /* 电机2协议帧头预填充（UART1: PB6/PB7） */
+        DCC_v1_3[0]=0xAA;
+        DCC_v1_3[1]=0x55;
+        DCC_v1_3[2]=0x01;
+        DCC_v1_3[3]=0x11;
+        DCC_v1_3[4]=0x05;
+        DCC_v1_3[5]=0x01;
+        DCC_v1_3[6]=0x00;
+        DCC_v1_3[7]=0x00;
+
         if (motor_trigger)
         {
             motor_trigger = 0;
             dianji_roll(30);
+            delay_ms(200);    // 30° 转到位大概需要几百毫秒，根据实际转速调整
+        }
+        if (motor2_trigger)
+        {
+            motor2_trigger = 0;
+            dianji2_roll(30);
             delay_ms(200);    // 30° 转到位大概需要几百毫秒，根据实际转速调整
         }
     }

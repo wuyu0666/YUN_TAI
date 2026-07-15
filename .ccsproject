@@ -13,6 +13,6 @@
 	<activeTargetConfiguration value="targetConfigs/MSPM0G3507.ccxml"/>
 	<isTargetConfigurationManual value="false"/>
 	<sourceLookupPath value="${COM_TI_MSPM0_SDK_INSTALL_DIR}/source/ti/driverlib"/>
-	<origin value="C:/Users/37558/Desktop/05_OLED"/>
+	<origin value="C:/Users/33193/Desktop/12334/YUN_TAI"/>
 	<filesToOpen value="README.md,empty.syscfg"/>
 </projectOptions>

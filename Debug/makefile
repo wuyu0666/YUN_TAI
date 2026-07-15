@@ -11,10 +11,12 @@ GEN_CMDS__FLAG := -Wl,-l"./device_linker.cmd"
 
 ORDERED_OBJS += \
 "./bujin.o" \
+"./bujin2.o" \
 "./delay.o" \
 "./ti_msp_dl_config.o" \
 "./startup_mspm0g350x_ticlang.o" \
 "./key.o" \
+"./key2.o" \
 "./main.o" \
 "./oled.o" \
 "./uart.o" \
@@ -134,15 +136,15 @@ all: $(OBJS) $(GEN_CMDS)
 # Tool invocations
 DCC_101_v1.out: $(OBJS) $(GEN_CMDS)
 	@echo 'Arm Linker - building target: "$@"'
-	"C:/ti/ccs2050/ccs/tools/compiler/ti-cgt-armllvm_4.0.4.LTS/bin/tiarmclang.exe" @"device.opt"  -march=thumbv6m -mcpu=cortex-m0plus -mfloat-abi=soft -mlittle-endian -mthumb -O0 -gdwarf-3 -Wall -Wl,-m"DCC_101_v1.map" -Wl,-i"C:/ti/mspm0_sdk_2_10_00_04/source" -Wl,-i"C:/Users/14395/workspace_ccstheia/DCC_101_v1" -Wl,-i"C:/Users/14395/workspace_ccstheia/DCC_101_v1/Debug/syscfg" -Wl,-i"C:/ti/ccs2050/ccs/tools/compiler/ti-cgt-armllvm_4.0.4.LTS/lib" -Wl,--diag_wrap=off -Wl,--display_error_number -Wl,--warn_sections -Wl,--xml_link_info="DCC_101_v1_linkInfo.xml" -Wl,--rom_model -o "DCC_101_v1.out" $(ORDERED_OBJS)
+	"C:/ti/ccs2050/ccs/tools/compiler/ti-cgt-armllvm_4.0.4.LTS/bin/tiarmclang.exe" @"device.opt"  -march=thumbv6m -mcpu=cortex-m0plus -mfloat-abi=soft -mlittle-endian -mthumb -O0 -gdwarf-3 -Wall -Wl,-m"DCC_101_v1.map" -Wl,-i"C:/ti/mspm0_sdk_2_10_00_04/source" -Wl,-i"C:/Users/33193/workspace_ccstheia/DCC_101_v1" -Wl,-i"C:/Users/33193/workspace_ccstheia/DCC_101_v1/Debug/syscfg" -Wl,-i"C:/ti/ccs2050/ccs/tools/compiler/ti-cgt-armllvm_4.0.4.LTS/lib" -Wl,--diag_wrap=off -Wl,--display_error_number -Wl,--warn_sections -Wl,--xml_link_info="DCC_101_v1_linkInfo.xml" -Wl,--rom_model -o "DCC_101_v1.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
 # Other Targets
 clean:
 	-$(RM) $(GEN_MISC_FILES__QUOTED)$(GEN_FILES__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "bujin.o" "delay.o" "ti_msp_dl_config.o" "startup_mspm0g350x_ticlang.o" "key.o" "main.o" "oled.o" "uart.o" 
-	-$(RM) "bujin.d" "delay.d" "ti_msp_dl_config.d" "startup_mspm0g350x_ticlang.d" "key.d" "main.d" "oled.d" "uart.d" 
+	-$(RM) "bujin.o" "bujin2.o" "delay.o" "ti_msp_dl_config.o" "startup_mspm0g350x_ticlang.o" "key.o" "key2.o" "main.o" "oled.o" "uart.o" 
+	-$(RM) "bujin.d" "bujin2.d" "delay.d" "ti_msp_dl_config.d" "startup_mspm0g350x_ticlang.d" "key.d" "key2.d" "main.d" "oled.d" "uart.d" 
 	-@echo ' '
 
 .PHONY: all clean dependents
