@@ -184,15 +184,24 @@ bool SYSCFG_DL_SYSCTL_SYSPLL_init(void);
 /* Defines for PIN_7: GPIOA.16 with pinCMx 38 on package pin 9 */
 #define anjian7_PIN_7_PIN                                       (DL_GPIO_PIN_16)
 #define anjian7_PIN_7_IOMUX                                      (IOMUX_PINCM38)
+/* Port definition for Pin Group fan1 */
+#define fan1_PORT                                                        (GPIOB)
+
+/* Defines for PIN_1: GPIOB.8 with pinCMx 25 on package pin 60 */
+#define fan1_PIN_1_PIN                                           (DL_GPIO_PIN_8)
+#define fan1_PIN_1_IOMUX                                         (IOMUX_PINCM25)
+/* Port definition for Pin Group fan2 */
+#define fan2_PORT                                                        (GPIOA)
+
+/* Defines for PIN_2: GPIOA.15 with pinCMx 37 on package pin 8 */
+#define fan2_PIN_2_PIN                                          (DL_GPIO_PIN_15)
+#define fan2_PIN_2_IOMUX                                         (IOMUX_PINCM37)
 /* Port definition for Pin Group LED */
 #define LED_PORT                                                         (GPIOA)
 
 /* Defines for LED0: GPIOA.14 with pinCMx 36 on package pin 7 */
 #define LED_LED0_PIN                                            (DL_GPIO_PIN_14)
 #define LED_LED0_IOMUX                                           (IOMUX_PINCM36)
-/* Defines for LED1: GPIOA.15 with pinCMx 37 on package pin 8 */
-#define LED_LED1_PIN                                            (DL_GPIO_PIN_15)
-#define LED_LED1_IOMUX                                           (IOMUX_PINCM37)
 
 
 /* clang-format on */

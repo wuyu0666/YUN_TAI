@@ -8,8 +8,6 @@
  * 提供基本的串口发送函数：单字节、字符串、缓冲区
  */
 
-#include "ti_msp_dl_config.h"
-
 /* 发送一个以'\0'结尾的字符串 */
 void UART_send_string(UART_Regs *uart, const char *str);
 

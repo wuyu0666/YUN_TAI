@@ -8,10 +8,6 @@
  * 提供按键状态的读取、消抖及PWM中断初始化功能
  */
 
-#include "ti_msp_dl_config.h"
-#include "uart.h"
-#include "delay.h"
-
 /* 轮询方式读取按键6状态（含消抖），触发电机滚动 */
 void key_read(void);
 

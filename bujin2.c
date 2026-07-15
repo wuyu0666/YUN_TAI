@@ -1,10 +1,10 @@
-#include "bujin2.h"
+#include "GC.h"
 
-/* DCC驱动器2通信协议缓冲区：50字节的命令/数据帧 */
-extern uint8_t DCC_v1_3[50];
+/* 电机2正向持续标志：PA16按住=1，松开=0 */
+volatile uint8_t motor2_forward_active = 0;
 
-/* 主循环用标志位：按键2触发后置1，通知主循环执行电机2动作 */
-volatile uint8_t motor2_trigger = 0;
+/* 电机2反向持续标志：PA15按住=1，松开=0 */
+volatile uint8_t motor2_reverse_active = 0;
 
 /**
  * @brief  驱动步进电机2滚动指定角度

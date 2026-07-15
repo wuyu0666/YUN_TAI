@@ -31,15 +31,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ti_msp_dl_config.h"
-#include "delay.h"
-#include "oled.h"
-#include <stdio.h>
-#include "uart.h"
-#include "key.h"
-#include "bujin.h"
-#include "bujin2.h"
-#include "key2.h"
+#include "GC.h"
 
 /* 电机1协议帧缓冲区（通过UART2: PA21/PA22发送） */
 uint8_t DCC_v1_2[50]={0};
@@ -47,8 +39,6 @@ uint8_t DCC_v1_2[50]={0};
 /* 电机2协议帧缓冲区（通过UART1: PB6/PB7发送） */
 uint8_t DCC_v1_3[50]={0};
 
-extern volatile uint8_t motor_trigger;
-extern volatile uint8_t motor2_trigger;
 int main(void)
 {
     SYSCFG_DL_init();
@@ -80,17 +70,25 @@ int main(void)
         DCC_v1_3[6]=0x00;
         DCC_v1_3[7]=0x00;
 
-        if (motor_trigger)
+        if (motor1_forward_active)
         {
-            motor_trigger = 0;
-            dianji_roll(30);
-            delay_ms(200);    // 30° 转到位大概需要几百毫秒，根据实际转速调整
+            dianji_roll(30);         // 电机1正向持续
+            delay_ms(80);
         }
-        if (motor2_trigger)
+        if (motor1_reverse_active)
         {
-            motor2_trigger = 0;
-            dianji2_roll(30);
-            delay_ms(200);    // 30° 转到位大概需要几百毫秒，根据实际转速调整
+            dianji_roll(-30);        // 电机1反向持续
+            delay_ms(80);
+        }
+        if (motor2_forward_active)
+        {
+            dianji2_roll(30);        // 电机2正向持续
+            delay_ms(80);
+        }
+        if (motor2_reverse_active)
+        {
+            dianji2_roll(-30);       // 电机2反向持续
+            delay_ms(80);
         }
     }
 }

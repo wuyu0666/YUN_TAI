@@ -1,6 +1,6 @@
 # FIXED
 
-bujin.o: ../bujin.c ../bujin.h \
+bujin.o: ../bujin.c ../GC.h \
  ti_msp_dl_config.h \
  C:/ti/mspm0_sdk_2_10_00_04/source/ti/devices/msp/msp.h \
  C:/ti/mspm0_sdk_2_10_00_04/source/ti/devices/DeviceFamily.h \
@@ -84,8 +84,9 @@ bujin.o: ../bujin.c ../bujin.h \
  C:/ti/mspm0_sdk_2_10_00_04/source/ti/driverlib/dl_wwdt.h \
  C:/ti/mspm0_sdk_2_10_00_04/source/ti/driverlib/m0p/dl_interrupt.h \
  C:/ti/mspm0_sdk_2_10_00_04/source/ti/driverlib/m0p/dl_systick.h \
- ../uart.h ../key.h ../delay.h ../bujin2.h ../key2.h
-../bujin.h:
+ ../delay.h ../uart.h ../key.h ../key2.h ../bujin.h ../bujin2.h \
+ ../oled.h
+../GC.h:
 ti_msp_dl_config.h:
 C:/ti/mspm0_sdk_2_10_00_04/source/ti/devices/msp/msp.h:
 C:/ti/mspm0_sdk_2_10_00_04/source/ti/devices/DeviceFamily.h:
@@ -169,8 +170,10 @@ C:/ti/mspm0_sdk_2_10_00_04/source/ti/driverlib/dl_vref.h:
 C:/ti/mspm0_sdk_2_10_00_04/source/ti/driverlib/dl_wwdt.h:
 C:/ti/mspm0_sdk_2_10_00_04/source/ti/driverlib/m0p/dl_interrupt.h:
 C:/ti/mspm0_sdk_2_10_00_04/source/ti/driverlib/m0p/dl_systick.h:
+../delay.h:
 ../uart.h:
 ../key.h:
-../delay.h:
-../bujin2.h:
 ../key2.h:
+../bujin.h:
+../bujin2.h:
+../oled.h:

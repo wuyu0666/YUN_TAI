@@ -1,14 +1,10 @@
-#include "bujin.h"
-#include "bujin2.h"
+#include "GC.h"
 
-/* DCC驱动器通信协议缓冲区 */
-extern uint8_t DCC_v1_2[50];
+/* 电机1正向持续标志：PB9按住=1，松开=0 */
+volatile uint8_t motor1_forward_active = 0;
 
-/* 主循环用标志位：按键触发后置1，通知主循环执行电机动作 */
-volatile uint8_t motor_trigger = 0;
-
-/* 电机2的标志位在bujin2.c中定义 */
-extern volatile uint8_t motor2_trigger;
+/* 电机1反向持续标志：PB8按住=1，松开=0 */
+volatile uint8_t motor1_reverse_active = 0;
 
 void key6_init();
 
@@ -50,71 +46,84 @@ void dianji_roll(int16_t roll)
 
 }
 /**
- * @brief  定时器PWM中断处理（用于按键消抖扫描）
+ * @brief  定时器PWM中断处理（4路按键电平消抖扫描）
  *
- * 通过定时器中断周期性地采样按键6(PB9)和按键7(PA16)状态，实现软件消抖。
- * 当检测到按键稳定按下时，分别置位 motor_trigger / motor2_trigger 通知主循环。
+ * PB9(anjian6) → 电平触发 → motor1_forward_active  (电机1正向，按住持续)
+ * PB8(fan1)    → 电平触发 → motor1_reverse_active  (电机1反向，按住持续)
+ * PA16(anjian7)→ 电平触发 → motor2_forward_active  (电机2正向，按住持续)
+ * PA15(fan2)   → 电平触发 → motor2_reverse_active  (电机2反向，按住持续)
  */
 void DCC_PWM_INST_IRQHandler()
 {
 
-    /* ---------- 按键6 (PB9) 消抖 ---------- */
-    static uint8_t  btn_stable = 0;       /* 消抖后的稳定按键值 */
-    static uint8_t  btn_cnt    = 0;       /* 消抖计数 */
-    static uint8_t  btn_last   = 0;       /* 上一次稳定状态，用于检测下降沿 */
-    /* ---------- 按键7 (PA16) 消抖 ---------- */
-    static uint8_t  btn2_stable = 0;      /* 按键7消抖稳定值 */
-    static uint8_t  btn2_cnt    = 0;      /* 按键7消抖计数 */
-    static uint8_t  btn2_last   = 0;      /* 按键7上一次稳定状态 */
+    /* ---- 按键6 (PB9) 电机1正向 电平消抖 ---- */
+    static uint8_t  btn_stable = 0;
+    static uint8_t  btn_cnt    = 0;
+    /* ---- 按键7 (PA16) 电机2正向 电平消抖 ---- */
+    static uint8_t  btn2_stable = 0;
+    static uint8_t  btn2_cnt    = 0;
+    /* ---- 按键8 (PB8) 电机1反向 电平消抖 ---- */
+    static uint8_t  btn3_stable = 0;
+    static uint8_t  btn3_cnt    = 0;
+    /* ---- 按键5 (PA15) 电机2反向 电平消抖 ---- */
+    static uint8_t  btn4_stable = 0;
+    static uint8_t  btn4_cnt    = 0;
 
     switch (DL_Timer_getPendingInterrupt(DCC_PWM_INST))
     {
         case DL_TIMER_IIDX_LOAD:
         {
-            /* 读取按键6 (PB9) 当前电平 */
+            /* ====== 按键6 (PB9) 电机1正向 ====== */
             uint8_t key_6 = get_key_state(anjian6_PORT, anjian6_PIN_0_PIN);
-
-            if (key_6 == btn_stable)
-            {
-                btn_cnt = 0;                  /* 状态未变，清零消抖计数 */
-            }
-            else
-            {
+            if (key_6 == btn_stable) {
+                btn_cnt = 0;
+            } else {
                 btn_cnt++;
-                if (btn_cnt >= 15)            /* 15 * 1.4ms ≈ 21ms 消抖时间 */
-                {
-                    btn_stable = key_6;       /* 状态稳定，更新稳定值 */
+                if (btn_cnt >= 15) {
+                    btn_stable = key_6;
                     btn_cnt    = 0;
                 }
-                /* 检测按下沿：上次松开(0) -> 本次按下(1) */
-                if (btn_stable == 1 && btn_last == 0)
-                {
-                    motor_trigger = 1;        /* 通知主循环处理按键事件 */
+            }
+            motor1_forward_active = btn_stable;
+
+            /* ====== 按键8 (PB8) 电机1反向 ====== */
+            uint8_t key_8 = get_key_state(fan1_PORT, fan1_PIN_1_PIN);
+            if (key_8 == btn3_stable) {
+                btn3_cnt = 0;
+            } else {
+                btn3_cnt++;
+                if (btn3_cnt >= 15) {
+                    btn3_stable = key_8;
+                    btn3_cnt    = 0;
                 }
-                btn_last = btn_stable;
             }
+            motor1_reverse_active = btn3_stable;
 
-            /* 读取按键7 (PA16) 当前电平 */
+            /* ====== 按键7 (PA16) 电机2正向 ====== */
             uint8_t key_7 = get_key_state(anjian7_PORT, anjian7_PIN_7_PIN);
-
-            if (key_7 == btn2_stable)
-            {
+            if (key_7 == btn2_stable) {
                 btn2_cnt = 0;
-            }
-            else
-            {
+            } else {
                 btn2_cnt++;
-                if (btn2_cnt >= 15)           /* 15 * 1.4ms ≈ 21ms 消抖时间 */
-                {
+                if (btn2_cnt >= 15) {
                     btn2_stable = key_7;
                     btn2_cnt    = 0;
                 }
-                if (btn2_stable == 1 && btn2_last == 0)
-                {
-                    motor2_trigger = 1;       /* 通知主循环处理按键7事件 */
-                }
-                btn2_last = btn2_stable;
             }
+            motor2_forward_active = btn2_stable;
+
+            /* ====== 按键5 (PA15) 电机2反向 ====== */
+            uint8_t key_5 = get_key_state(fan2_PORT, fan2_PIN_2_PIN);
+            if (key_5 == btn4_stable) {
+                btn4_cnt = 0;
+            } else {
+                btn4_cnt++;
+                if (btn4_cnt >= 15) {
+                    btn4_stable = key_5;
+                    btn4_cnt    = 0;
+                }
+            }
+            motor2_reverse_active = btn4_stable;
 
             break;
         }

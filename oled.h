@@ -1,10 +1,6 @@
 #ifndef __OLED_H
 #define __OLED_H 
 
-#include "ti_msp_dl_config.h"
-#include <stdint.h>
-#include <stdlib.h>
-
 // ---------------------------------------------------------
 #define OLED_CMD  0	//写命令
 #define OLED_DATA 1	//写数据

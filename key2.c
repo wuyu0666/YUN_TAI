@@ -1,8 +1,4 @@
-#include "key2.h"
-#include "bujin2.h"
-
-/* DCC驱动器2通信协议缓冲区 */
-extern uint8_t DCC_v1_3[50];
+#include "GC.h"
 
 /**
  * @brief  轮询方式读取按键7(PA16)状态（含软件消抖）

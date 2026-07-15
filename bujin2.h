@@ -8,10 +8,6 @@
  * 通过UART1(PB6/PB7)发送指令控制第二个步进电机滚动指定角度
  */
 
-#include "ti_msp_dl_config.h"
-#include "uart.h"
-#include "key2.h"
-
 /* 角度换算系数：编码器分辨率(16384) / 360度 = 每度对应的编码器计数 */
 #define jiaodu2 16384/360
 

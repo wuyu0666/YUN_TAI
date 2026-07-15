@@ -1,5 +1,4 @@
-#include "oled.h"
-#include "stdlib.h"
+#include "GC.h"
 #include "oledfont.h"
 
 u8 OLED_GRAM[144][8];
