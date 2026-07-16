@@ -41,5 +41,10 @@ extern volatile uint8_t motor1_forward_active;   /* 电机1正向 PB9  (定义�
 extern volatile uint8_t motor1_reverse_active;   /* 电机1反向 PB8  (定义在 bujin.c)  */
 extern volatile uint8_t motor2_forward_active;   /* 电机2正向 PA16 (定义在 bujin2.c) */
 extern volatile uint8_t motor2_reverse_active;   /* 电机2反向 PA15 (定义在 bujin2.c) */
-
+extern volatile uint8_t bujin_x;
+extern volatile uint8_t bujin_y;
+extern volatile uint8_t dir_x;
+extern volatile uint16_t pulse_x;
+extern volatile uint8_t dir_y;
+extern volatile uint16_t pulse_y;
 #endif

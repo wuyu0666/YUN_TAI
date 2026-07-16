@@ -167,11 +167,33 @@ bool SYSCFG_DL_SYSCTL_SYSPLL_init(void);
 #define DCC101_v1_3_BAUD_RATE                                           (115200)
 #define DCC101_v1_3_IBRD_40_MHZ_115200_BAUD                                 (21)
 #define DCC101_v1_3_FBRD_40_MHZ_115200_BAUD                                 (45)
+/* Defines for K230 */
+#define K230_INST                                                          UART3
+#define K230_INST_FREQUENCY                                             80000000
+#define K230_INST_IRQHandler                                    UART3_IRQHandler
+#define K230_INST_INT_IRQN                                        UART3_INT_IRQn
+#define GPIO_K230_RX_PORT                                                  GPIOA
+#define GPIO_K230_TX_PORT                                                  GPIOA
+#define GPIO_K230_RX_PIN                                          DL_GPIO_PIN_13
+#define GPIO_K230_TX_PIN                                          DL_GPIO_PIN_26
+#define GPIO_K230_IOMUX_RX                                       (IOMUX_PINCM35)
+#define GPIO_K230_IOMUX_TX                                       (IOMUX_PINCM59)
+#define GPIO_K230_IOMUX_RX_FUNC                        IOMUX_PINCM35_PF_UART3_RX
+#define GPIO_K230_IOMUX_TX_FUNC                        IOMUX_PINCM59_PF_UART3_TX
+#define K230_BAUD_RATE                                                  (115200)
+#define K230_IBRD_80_MHZ_115200_BAUD                                        (43)
+#define K230_FBRD_80_MHZ_115200_BAUD                                        (26)
 
 
 
 
 
+/* Port definition for Pin Group LED */
+#define LED_PORT                                                         (GPIOA)
+
+/* Defines for LED0: GPIOA.14 with pinCMx 36 on package pin 7 */
+#define LED_LED0_PIN                                            (DL_GPIO_PIN_14)
+#define LED_LED0_IOMUX                                           (IOMUX_PINCM36)
 /* Port definition for Pin Group anjian6 */
 #define anjian6_PORT                                                     (GPIOB)
 
@@ -196,12 +218,6 @@ bool SYSCFG_DL_SYSCTL_SYSPLL_init(void);
 /* Defines for PIN_2: GPIOA.15 with pinCMx 37 on package pin 8 */
 #define fan2_PIN_2_PIN                                          (DL_GPIO_PIN_15)
 #define fan2_PIN_2_IOMUX                                         (IOMUX_PINCM37)
-/* Port definition for Pin Group LED */
-#define LED_PORT                                                         (GPIOA)
-
-/* Defines for LED0: GPIOA.14 with pinCMx 36 on package pin 7 */
-#define LED_LED0_PIN                                            (DL_GPIO_PIN_14)
-#define LED_LED0_IOMUX                                           (IOMUX_PINCM36)
 
 
 /* clang-format on */
@@ -217,6 +233,7 @@ void SYSCFG_DL_OLED_init(void);
 void SYSCFG_DL_PRINT_init(void);
 void SYSCFG_DL_DCC101_v1_2_init(void);
 void SYSCFG_DL_DCC101_v1_3_init(void);
+void SYSCFG_DL_K230_init(void);
 
 
 bool SYSCFG_DL_saveConfiguration(void);

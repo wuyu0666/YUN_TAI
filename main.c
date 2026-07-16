@@ -38,7 +38,12 @@ uint8_t DCC_v1_2[50]={0};
 
 /* 电机2协议帧缓冲区（通过UART1: PB6/PB7发送） */
 uint8_t DCC_v1_3[50]={0};
-
+volatile uint8_t bujin_x;
+volatile uint8_t bujin_y;
+volatile uint8_t dir_x;
+volatile uint16_t pulse_x;
+volatile uint8_t dir_y;
+volatile uint16_t pulse_y;
 int main(void)
 {
     SYSCFG_DL_init();
@@ -48,7 +53,8 @@ int main(void)
     OLED_Clear();
     key6_init();
     key7_init();
-    NVIC_EnableIRQ(PRINT_INST_INT_IRQN);
+    // NVIC_EnableIRQ(PRINT_INST_INT_IRQN);
+    NVIC_EnableIRQ(K230_INST_INT_IRQN);
     while (1) {
         // OLED_Refresh();
         /* 电机1协议帧头预填充（UART2: PA21/PA22） */
@@ -89,6 +95,20 @@ int main(void)
         {
             dianji2_roll(-30);       // 电机2反向持续
             delay_ms(80);
+        }
+        if(bujin_x==1)
+        {
+            int16_t angle_x = pulse_x / jiaodu;
+            if (dir_x == 0x00) angle_x = -angle_x;
+            dianji_roll(angle_x);
+            bujin_x=0;
+        }
+        if(bujin_y==1)
+        {
+            int16_t angle_y = pulse_y / jiaodu2;
+            if (dir_y == 0x00) angle_y = -angle_y;
+            dianji2_roll(angle_y);
+            bujin_y=0;
         }
     }
 }
