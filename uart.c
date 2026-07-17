@@ -73,17 +73,14 @@ void K230_INST_IRQHandler(void)
             uint8_t byte = DL_UART_receiveData(K230_INST);
             rx_buf[rx_idx++] = byte;
 
-            // 帧头检测：非 0xAA 开头则重置
             if (rx_idx == 1 && rx_buf[0] != 0xAA) 
             {
                 rx_idx = 0;
             }
-        // 第二个字节必须是 0x55
             if (rx_idx == 2 && rx_buf[1] != 0x55) 
             {
                 rx_idx = 0;
             }
-        // 收满 8 字节 → 解析
             if (rx_idx == FRAME_LEN) 
             {
                 dir_x    = rx_buf[2];
@@ -93,8 +90,7 @@ void K230_INST_IRQHandler(void)
                 pulse_y = rx_buf[6] | ((uint16_t)rx_buf[7] << 8);
                 bujin_y=1;
 
-                
-                rx_idx = 0;   // 复位，准备下一帧
+                rx_idx = 0;
             }
             break;
     }
