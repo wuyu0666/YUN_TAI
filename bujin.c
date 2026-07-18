@@ -1,4 +1,4 @@
-#include "GC.h"
+﻿#include "GC.h"
 
 /* 电机1正向持续标志：PB9按住=1，松开=0 */
 volatile uint8_t motor1_forward_active = 0;
@@ -28,8 +28,8 @@ void dianji_roll(int16_t roll)
         fangxiang=0x01;                     /* 正角度 -> 正向旋转 */
     }
     /* 将角度转换为编码器脉冲数并填入协议帧 */
-    DCC_v1_2[8]=(jiaodu*roll)&0xFF;         /* 脉冲数低字节 */
-    DCC_v1_2[9]=((jiaodu*roll)>>8)&0xFF;    /* 脉冲数高字节 */
+    DCC_v1_2[8]=((uint16_t)(jiaodu*roll))&0xFF;         /* 脉冲数低字节 */
+    DCC_v1_2[9]=(((uint16_t)(jiaodu*roll))>>8)&0xFF;    /* 脉冲数高字节 */
     DCC_v1_2[5]=fangxiang;                  /* 方向字节 */
     /* 计算校验和：对协议帧[2]~[9]求和 */
     uint8_t check_sum=0;
@@ -53,6 +53,19 @@ void dianji_roll(int16_t roll)
  * PA16(anjian7)→ 电平触发 → motor2_forward_active  (电机2正向，按住持续)
  * PA15(fan2)   → 电平触发 → motor2_reverse_active  (电机2反向，按住持续)
  */
+
+void dianji_roll_pulse(uint16_t pulse, uint8_t dir)
+{
+    DCC_v1_2[0]=0xAA; DCC_v1_2[1]=0x55; DCC_v1_2[2]=0x01;
+    DCC_v1_2[3]=0x11; DCC_v1_2[4]=0x05; DCC_v1_2[5]=dir;
+    DCC_v1_2[6]=0x00; DCC_v1_2[7]=0x00;
+    DCC_v1_2[8]=pulse&0xFF; DCC_v1_2[9]=(pulse>>8)&0xFF;
+    uint8_t cs=0; for(int i=2;i<10;i++) cs+=DCC_v1_2[i];
+    DCC_v1_2[10]=cs;
+    uint8_t wu[]={0xAA,0xAA,0xAA};
+    UART_send_buffer(DCC101_v1_2_INST,wu,3); delay_ms(20);
+    UART_send_buffer(DCC101_v1_2_INST,DCC_v1_2,DCC_v1_2[4]+6);
+}
 void DCC_PWM_INST_IRQHandler()
 {
 
