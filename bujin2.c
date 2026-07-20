@@ -42,3 +42,32 @@ void dianji2_roll(int16_t roll)
     delay_ms(20);                            /* 等待驱动器就绪 */
     UART_send_buffer(DCC101_v1_3_INST, DCC_v1_3,DCC_v1_3[4]+6);  /* 发送协议帧 */
 }
+
+void dianji2_pulse(int32_t pulse)
+{
+    if (pulse > 65535) pulse = 65535;
+    if (pulse < -65535) pulse = -65535;
+    uint8_t fangxiang=0x01;
+    if(pulse<=0)
+    {
+        pulse=-pulse;
+        fangxiang=0x00;
+    }
+    else
+    {
+        fangxiang=0x01;
+    }
+    DCC_v1_3[8]=pulse&0xFF;
+    DCC_v1_3[9]=(pulse>>8)&0xFF;
+    DCC_v1_3[5]=fangxiang;
+    uint8_t check_sum=0;
+    for(int i=2;i<10;i++)
+    {
+        check_sum+=DCC_v1_3[i];
+    }
+    DCC_v1_3[10]=check_sum;
+    uint8_t wakeup[] = {0xAA, 0xAA, 0xAA};
+    UART_send_buffer(DCC101_v1_3_INST, wakeup, 3);
+    delay_ms(20);
+    UART_send_buffer(DCC101_v1_3_INST, DCC_v1_3,DCC_v1_3[4]+6);
+}

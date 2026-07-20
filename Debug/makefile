@@ -10,6 +10,7 @@ GEN_OPTS__FLAG := @"./device.opt"
 GEN_CMDS__FLAG := -Wl,-l"./device_linker.cmd" 
 
 ORDERED_OBJS += \
+"./bihuan_pid.o" \
 "./bujin.o" \
 "./bujin2.o" \
 "./delay.o" \
@@ -143,8 +144,8 @@ DCC_101_v1.out: $(OBJS) $(GEN_CMDS)
 # Other Targets
 clean:
 	-$(RM) $(GEN_MISC_FILES__QUOTED)$(GEN_FILES__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "bujin.o" "bujin2.o" "delay.o" "ti_msp_dl_config.o" "startup_mspm0g350x_ticlang.o" "key.o" "key2.o" "main.o" "oled.o" "uart.o" 
-	-$(RM) "bujin.d" "bujin2.d" "delay.d" "ti_msp_dl_config.d" "startup_mspm0g350x_ticlang.d" "key.d" "key2.d" "main.d" "oled.d" "uart.d" 
+	-$(RM) "bihuan_pid.o" "bujin.o" "bujin2.o" "delay.o" "ti_msp_dl_config.o" "startup_mspm0g350x_ticlang.o" "key.o" "key2.o" "main.o" "oled.o" "uart.o" 
+	-$(RM) "bihuan_pid.d" "bujin.d" "bujin2.d" "delay.d" "ti_msp_dl_config.d" "startup_mspm0g350x_ticlang.d" "key.d" "key2.d" "main.d" "oled.d" "uart.d" 
 	-@echo ' '
 
 .PHONY: all clean dependents

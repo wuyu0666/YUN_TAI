@@ -45,6 +45,35 @@ void dianji_roll(int16_t roll)
     UART_send_buffer(DCC101_v1_2_INST, DCC_v1_2,DCC_v1_2[4]+6);  /* 发送协议帧 */
 
 }
+
+void dianji1_pulse(int32_t pulse)
+{
+    if (pulse > 65535) pulse = 65535;
+    if (pulse < -65535) pulse = -65535;
+    uint8_t fangxiang=0x01;
+    if(pulse<=0)
+    {
+        pulse=-pulse;
+        fangxiang=0x00;
+    }
+    else
+    {
+        fangxiang=0x01;
+    }
+    DCC_v1_2[8]=pulse&0xFF;
+    DCC_v1_2[9]=(pulse>>8)&0xFF;
+    DCC_v1_2[5]=fangxiang;
+    uint8_t check_sum=0;
+    for(int i=2;i<10;i++)
+    {
+        check_sum+=DCC_v1_2[i];
+    }
+    DCC_v1_2[10]=check_sum;
+    uint8_t wakeup[] = {0xAA, 0xAA, 0xAA};
+    UART_send_buffer(DCC101_v1_2_INST, wakeup, 3);
+    delay_ms(20);
+    UART_send_buffer(DCC101_v1_2_INST, DCC_v1_2,DCC_v1_2[4]+6);
+}
 /**
  * @brief  定时器PWM中断处理（4路按键电平消抖扫描）
  *

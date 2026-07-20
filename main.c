@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2021, Texas Instruments Incorporated
- 
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,12 +37,17 @@ uint8_t DCC_v1_2[50]={0};
 
 /* 电机2协议帧缓冲区（通过UART1: PB6/PB7发送） */
 uint8_t DCC_v1_3[50]={0};
-volatile uint8_t bujin_x;
-volatile uint8_t bujin_y;
-volatile uint8_t dir_x;
+
+volatile uint8_t  bujin_x;
+volatile uint8_t  bujin_y;
+volatile uint8_t  dir_x;
 volatile uint16_t pulse_x;
-volatile uint8_t dir_y;
+volatile uint8_t  dir_y;
 volatile uint16_t pulse_y;
+
+static PID_Inc_t pid_x;
+static PID_Inc_t pid_y;
+
 int main(void)
 {
     SYSCFG_DL_init();
@@ -55,6 +59,10 @@ int main(void)
     key7_init();
     // NVIC_EnableIRQ(PRINT_INST_INT_IRQN);
     NVIC_EnableIRQ(K230_INST_INT_IRQN);
+
+    PID_Inc_Init(&pid_x, 0.02f, 0.01f, 0.01f, 3.0f, 3000.0f, -3000.0f);
+    PID_Inc_Init(&pid_y, 0.02f, 0.01f, 0.01f, 3.0f, 3000.0f, -3000.0f);
+
     while (1) {
         // OLED_Refresh();
         /* 电机1协议帧头预填充（UART2: PA21/PA22） */
@@ -78,36 +86,36 @@ int main(void)
 
         if (motor1_forward_active)
         {
-            dianji_roll(30);         // 电机1正向持续
+            dianji_roll(30);
             delay_ms(80);
         }
         if (motor1_reverse_active)
         {
-            dianji_roll(-30);        // 电机1反向持续
+            dianji_roll(-30);
             delay_ms(80);
         }
         if (motor2_forward_active)
         {
-            dianji2_roll(30);        // 电机2正向持续
+            dianji2_roll(30);
             delay_ms(80);
         }
         if (motor2_reverse_active)
         {
-            dianji2_roll(-30);       // 电机2反向持续
+            dianji2_roll(-30);
             delay_ms(80);
         }
         if(bujin_x==1)
         {
-            int16_t angle_x = pulse_x / jiaodu;
-            if (dir_x == 0x00) angle_x = -angle_x;
-            dianji_roll(angle_x);
+            float feedback_x = (dir_x == 0x01) ? (float)pulse_x : -(float)pulse_x;
+            float angle_x = PID_Inc_Calc(&pid_x, 0.0f, feedback_x);
+            dianji1_pulse((int32_t)angle_x);
             bujin_x=0;
         }
         if(bujin_y==1)
         {
-            int16_t angle_y = pulse_y / jiaodu2;
-            if (dir_y == 0x00) angle_y = -angle_y;
-            dianji2_roll(angle_y);
+            float feedback_y = (dir_y == 0x01) ? (float)pulse_y : -(float)pulse_y;
+            float angle_y = PID_Inc_Calc(&pid_y, 0.0f, feedback_y);
+            dianji2_pulse((int32_t)(-angle_y));
             bujin_y=0;
         }
     }

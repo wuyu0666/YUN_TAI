@@ -23,6 +23,9 @@
 #include "bujin.h"                  /* 电机1(UART2/PA21/PA22)：dianji_roll() */
 #include "bujin2.h"                 /* 电机2(UART1/PB6/PB7) ：dianji2_roll() */
 
+/* ====== PID 控制模块 ====== */
+#include "bihuan_pid.h"             /* 增量式 PID 控制器 */
+
 /* ====== OLED 显示模块 ====== */
 #include "oled.h"                   /* SSD1306 128x64 OLED 驱动 */
 

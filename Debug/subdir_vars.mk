@@ -9,6 +9,7 @@ SYSCFG_SRCS += \
 ../empty.syscfg 
 
 C_SRCS += \
+../bihuan_pid.c \
 ../bujin.c \
 ../bujin2.c \
 ../delay.c \
@@ -29,6 +30,7 @@ GEN_FILES += \
 ./ti_msp_dl_config.c 
 
 C_DEPS += \
+./bihuan_pid.d \
 ./bujin.d \
 ./bujin2.d \
 ./delay.d \
@@ -44,6 +46,7 @@ GEN_OPTS += \
 ./device.opt 
 
 OBJS += \
+./bihuan_pid.o \
 ./bujin.o \
 ./bujin2.o \
 ./delay.o \
@@ -61,6 +64,7 @@ GEN_MISC_FILES += \
 ./Event.dot 
 
 OBJS__QUOTED += \
+"bihuan_pid.o" \
 "bujin.o" \
 "bujin2.o" \
 "delay.o" \
@@ -78,6 +82,7 @@ GEN_MISC_FILES__QUOTED += \
 "Event.dot" 
 
 C_DEPS__QUOTED += \
+"bihuan_pid.d" \
 "bujin.d" \
 "bujin2.d" \
 "delay.d" \
@@ -95,6 +100,7 @@ GEN_FILES__QUOTED += \
 "ti_msp_dl_config.c" 
 
 C_SRCS__QUOTED += \
+"../bihuan_pid.c" \
 "../bujin.c" \
 "../bujin2.c" \
 "../delay.c" \

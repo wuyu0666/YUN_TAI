@@ -14,4 +14,7 @@
 /* 电机2滚动函数：正值为正向旋转，负值为反向旋转，参数单位为度 */
 void dianji2_roll(int16_t roll);
 
+/* 电机2脉冲发送函数：正值为正向，负值为反向，参数单位为编码器脉冲 */
+void dianji2_pulse(int32_t pulse);
+
 #endif
