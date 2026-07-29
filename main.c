@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2021, Texas Instruments Incorporated
  * All rights reserved.
  *
@@ -59,26 +59,41 @@ int main(void){
 
     /* ====== 步进电机开机自检（含超限钳位测试） ====== */
     motor_target = 5;
-    OLED_ShowString(0, 0, (u8 *)"Tst:+005    ", 12); OLED_Refresh();
-    dianji_rotate_to(motor_target);  delay_ms(1200);
+    OLED_ShowString(0, 0, (u8 *)"Tst:+005    ", 12);
+    dianji_rotate_to(motor_target);
+    sprintf(disp_buf, "Tgt:%+05d", motor_target);  OLED_ShowString(0, 16, (u8 *)disp_buf, 12);
+    sprintf(disp_buf, "Act:%+05d", (int)motor_angle); OLED_ShowString(0, 32, (u8 *)disp_buf, 12);
+    OLED_Refresh();  delay_ms(1200);
 
     motor_target = -5;
-    OLED_ShowString(0, 0, (u8 *)"Tst:-005    ", 12); OLED_Refresh();
-    dianji_rotate_to(motor_target);  delay_ms(1200);
+    OLED_ShowString(0, 0, (u8 *)"Tst:-005    ", 12);
+    dianji_rotate_to(motor_target);
+    sprintf(disp_buf, "Tgt:%+05d", motor_target);  OLED_ShowString(0, 16, (u8 *)disp_buf, 12);
+    sprintf(disp_buf, "Act:%+05d", (int)motor_angle); OLED_ShowString(0, 32, (u8 *)disp_buf, 12);
+    OLED_Refresh();  delay_ms(1200);
 
-    /* 超限：+10° → 钳到+5° */
+    /* 超限：+10° -> 钳到+5° */
     motor_target = 10;
-    OLED_ShowString(0, 0, (u8 *)"Tst:+010>+5", 12); OLED_Refresh();
-    dianji_rotate_to(motor_target);  delay_ms(1500);
+    OLED_ShowString(0, 0, (u8 *)"Tst:+010>+5", 12);
+    dianji_rotate_to(motor_target);
+    sprintf(disp_buf, "Tgt:%+05d", motor_target);  OLED_ShowString(0, 16, (u8 *)disp_buf, 12);
+    sprintf(disp_buf, "Act:%+05d", (int)motor_angle); OLED_ShowString(0, 32, (u8 *)disp_buf, 12);
+    OLED_Refresh();  delay_ms(1500);
 
-    /* 超限：-8° → 钳到-5° */
+    /* 超限：-8° -> 钳到-5° */
     motor_target = -8;
-    OLED_ShowString(0, 0, (u8 *)"Tst:-008>-5", 12); OLED_Refresh();
-    dianji_rotate_to(motor_target);  delay_ms(1500);
+    OLED_ShowString(0, 0, (u8 *)"Tst:-008>-5", 12);
+    dianji_rotate_to(motor_target);
+    sprintf(disp_buf, "Tgt:%+05d", motor_target);  OLED_ShowString(0, 16, (u8 *)disp_buf, 12);
+    sprintf(disp_buf, "Act:%+05d", (int)motor_angle); OLED_ShowString(0, 32, (u8 *)disp_buf, 12);
+    OLED_Refresh();  delay_ms(1500);
 
     motor_target = 0;
-    OLED_ShowString(0, 0, (u8 *)"Tst:Finish  ", 12); OLED_Refresh();
-    dianji_rotate_to(motor_target);  delay_ms(800);
+    OLED_ShowString(0, 0, (u8 *)"Tst:Finish  ", 12);
+    dianji_rotate_to(motor_target);
+    sprintf(disp_buf, "Tgt:%+05d", motor_target);  OLED_ShowString(0, 16, (u8 *)disp_buf, 12);
+    sprintf(disp_buf, "Act:%+05d", (int)motor_angle); OLED_ShowString(0, 32, (u8 *)disp_buf, 12);
+    OLED_Refresh();  delay_ms(800);
 
 
     while (1) {
