@@ -1,9 +1,9 @@
 ﻿#include "GC.h"
 
-/* 电机1正向持续标志：PB9按住=1，松开=0 */
+/* 电机正向持续标志：PB9按住=1，松开=0 */
 volatile uint8_t motor1_forward_active = 0;
 
-/* 电机1反向持续标志：PB8按住=1，松开=0 */
+/* 电机反向持续标志：PB8按住=1，松开=0 */
 volatile uint8_t motor1_reverse_active = 0;
 
 void key6_init();
@@ -74,14 +74,6 @@ void dianji1_pulse(int32_t pulse)
     delay_ms(20);
     UART_send_buffer(DCC101_v1_2_INST, DCC_v1_2,DCC_v1_2[4]+6);
 }
-/**
- * @brief  定时器PWM中断处理（4路按键电平消抖扫描）
- *
- * PB9(anjian6) → 电平触发 → motor1_forward_active  (电机1正向，按住持续)
- * PB8(fan1)    → 电平触发 → motor1_reverse_active  (电机1反向，按住持续)
- * PA16(anjian7)→ 电平触发 → motor2_forward_active  (电机2正向，按住持续)
- * PA15(fan2)   → 电平触发 → motor2_reverse_active  (电机2反向，按住持续)
- */
 
 void dianji_roll_pulse(uint16_t pulse, uint8_t dir)
 {
@@ -95,27 +87,27 @@ void dianji_roll_pulse(uint16_t pulse, uint8_t dir)
     UART_send_buffer(DCC101_v1_2_INST,wu,3); delay_ms(20);
     UART_send_buffer(DCC101_v1_2_INST,DCC_v1_2,DCC_v1_2[4]+6);
 }
+
+/**
+ * @brief  定时器PWM中断处理（2路按键电平消抖扫描）
+ *
+ * PB9(anjian6) → 电平触发 → motor1_forward_active  (电机正向，按住持续)
+ * PB8(fan1)    → 电平触发 → motor1_reverse_active  (电机反向，按住持续)
+ */
 void DCC_PWM_INST_IRQHandler()
 {
-
-    /* ---- 按键6 (PB9) 电机1正向 电平消抖 ---- */
+    /* ---- 按键6 (PB9) 电机正向 电平消抖 ---- */
     static uint8_t  btn_stable = 0;
     static uint8_t  btn_cnt    = 0;
-    /* ---- 按键7 (PA16) 电机2正向 电平消抖 ---- */
-    static uint8_t  btn2_stable = 0;
-    static uint8_t  btn2_cnt    = 0;
-    /* ---- 按键8 (PB8) 电机1反向 电平消抖 ---- */
+    /* ---- 按键8 (PB8) 电机反向 电平消抖 ---- */
     static uint8_t  btn3_stable = 0;
     static uint8_t  btn3_cnt    = 0;
-    /* ---- 按键5 (PA15) 电机2反向 电平消抖 ---- */
-    static uint8_t  btn4_stable = 0;
-    static uint8_t  btn4_cnt    = 0;
 
     switch (DL_Timer_getPendingInterrupt(DCC_PWM_INST))
     {
         case DL_TIMER_IIDX_LOAD:
         {
-            /* ====== 按键6 (PB9) 电机1正向 ====== */
+            /* ====== 按键6 (PB9) 电机正向 ====== */
             uint8_t key_6 = get_key_state(anjian6_PORT, anjian6_PIN_0_PIN);
             if (key_6 == btn_stable) {
                 btn_cnt = 0;
@@ -128,7 +120,7 @@ void DCC_PWM_INST_IRQHandler()
             }
             motor1_forward_active = btn_stable;
 
-            /* ====== 按键8 (PB8) 电机1反向 ====== */
+            /* ====== 按键8 (PB8) 电机反向 ====== */
             uint8_t key_8 = get_key_state(fan1_PORT, fan1_PIN_1_PIN);
             if (key_8 == btn3_stable) {
                 btn3_cnt = 0;
@@ -140,32 +132,6 @@ void DCC_PWM_INST_IRQHandler()
                 }
             }
             motor1_reverse_active = btn3_stable;
-
-            /* ====== 按键7 (PA16) 电机2正向 ====== */
-            uint8_t key_7 = get_key_state(anjian7_PORT, anjian7_PIN_7_PIN);
-            if (key_7 == btn2_stable) {
-                btn2_cnt = 0;
-            } else {
-                btn2_cnt++;
-                if (btn2_cnt >= 15) {
-                    btn2_stable = key_7;
-                    btn2_cnt    = 0;
-                }
-            }
-            motor2_forward_active = btn2_stable;
-
-            /* ====== 按键5 (PA15) 电机2反向 ====== */
-            uint8_t key_5 = get_key_state(fan2_PORT, fan2_PIN_2_PIN);
-            if (key_5 == btn4_stable) {
-                btn4_cnt = 0;
-            } else {
-                btn4_cnt++;
-                if (btn4_cnt >= 15) {
-                    btn4_stable = key_5;
-                    btn4_cnt    = 0;
-                }
-            }
-            motor2_reverse_active = btn4_stable;
 
             break;
         }

@@ -1,8 +1,5 @@
-#include "GC.h"
-// extern volatile uint8_t dir_x=0;
-// extern volatile uint16_t pulse_x=0;
-// extern volatile uint8_t dir_y=0;
-// extern volatile uint16_t pulse_y=0;
+﻿#include "GC.h"
+
 /**
  * @brief  阻塞方式发送一个字节
  * @param  uart  UART外设寄存器基地址
@@ -40,27 +37,12 @@ void UART_send_buffer(UART_Regs *uart, const uint8_t *buffer, size_t len)
 }
 
 /**
- * @brief  串口打印中断处理（UART RX回显）
+ * @brief  K230 视觉数据接收中断处理
  *
- * 接收一个字节后立即回发，实现简单的串口回显功能。
+ * 帧格式：AA 55 [dir_x] [pulse_x_L] [pulse_x_H]（共5字节）
+ * 帧头校验后解析方向与脉冲，置位 bujin_x 通知主循环消费。
  */
-// void PRINT_INST_IRQHandler()
-// {
-//     switch (DL_UART_getPendingInterrupt(PRINT_INST))
-//     {
-//     case DL_UART_IIDX_RX:
-//         {   
-//             uint8_t rec = DL_UART_receiveData(PRINT_INST);  /* 接收一个字节 */
-//             UART_send_char(PRINT_INST, rec);                /* 回显发送 */
-//             break;
-//         }
-    
-//     default:
-//         break;
-//     }
-// }
-
-#define FRAME_LEN 8
+#define FRAME_LEN 5
 static uint8_t rx_buf[FRAME_LEN];
 static uint8_t rx_idx = 0;
 
@@ -83,18 +65,15 @@ void K230_INST_IRQHandler(void)
             }
             if (rx_idx == FRAME_LEN) 
             {
-                dir_x    = rx_buf[2];
+                dir_x   = rx_buf[2];
                 pulse_x = rx_buf[3] | ((uint16_t)rx_buf[4] << 8);
-                bujin_x=1;
-                dir_y    = rx_buf[5];
-                pulse_y = rx_buf[6] | ((uint16_t)rx_buf[7] << 8);
-                bujin_y=1;
+                bujin_x = 1;
 
                 rx_idx = 0;
             }
             break;
-    }
-    default:
-        break;
+        }
+        default:
+            break;
     }
 }

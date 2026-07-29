@@ -151,22 +151,6 @@ bool SYSCFG_DL_SYSCTL_SYSPLL_init(void);
 #define DCC101_v1_2_BAUD_RATE                                           (115200)
 #define DCC101_v1_2_IBRD_40_MHZ_115200_BAUD                                 (21)
 #define DCC101_v1_2_FBRD_40_MHZ_115200_BAUD                                 (45)
-/* Defines for DCC101_v1_3 */
-#define DCC101_v1_3_INST                                                   UART1
-#define DCC101_v1_3_INST_FREQUENCY                                      40000000
-#define DCC101_v1_3_INST_IRQHandler                             UART1_IRQHandler
-#define DCC101_v1_3_INST_INT_IRQN                                 UART1_INT_IRQn
-#define GPIO_DCC101_v1_3_RX_PORT                                           GPIOB
-#define GPIO_DCC101_v1_3_TX_PORT                                           GPIOB
-#define GPIO_DCC101_v1_3_RX_PIN                                    DL_GPIO_PIN_7
-#define GPIO_DCC101_v1_3_TX_PIN                                    DL_GPIO_PIN_6
-#define GPIO_DCC101_v1_3_IOMUX_RX                                (IOMUX_PINCM24)
-#define GPIO_DCC101_v1_3_IOMUX_TX                                (IOMUX_PINCM23)
-#define GPIO_DCC101_v1_3_IOMUX_RX_FUNC                 IOMUX_PINCM24_PF_UART1_RX
-#define GPIO_DCC101_v1_3_IOMUX_TX_FUNC                 IOMUX_PINCM23_PF_UART1_TX
-#define DCC101_v1_3_BAUD_RATE                                           (115200)
-#define DCC101_v1_3_IBRD_40_MHZ_115200_BAUD                                 (21)
-#define DCC101_v1_3_FBRD_40_MHZ_115200_BAUD                                 (45)
 /* Defines for K230 */
 #define K230_INST                                                          UART3
 #define K230_INST_FREQUENCY                                             80000000
@@ -232,7 +216,6 @@ void SYSCFG_DL_DCC_PWM_init(void);
 void SYSCFG_DL_OLED_init(void);
 void SYSCFG_DL_PRINT_init(void);
 void SYSCFG_DL_DCC101_v1_2_init(void);
-void SYSCFG_DL_DCC101_v1_3_init(void);
 void SYSCFG_DL_K230_init(void);
 
 

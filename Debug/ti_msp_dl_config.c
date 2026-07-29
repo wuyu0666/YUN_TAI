@@ -57,7 +57,6 @@ SYSCONFIG_WEAK void SYSCFG_DL_init(void)
     SYSCFG_DL_OLED_init();
     SYSCFG_DL_PRINT_init();
     SYSCFG_DL_DCC101_v1_2_init();
-    SYSCFG_DL_DCC101_v1_3_init();
     SYSCFG_DL_K230_init();
     /* Ensure backup structures have no valid state */
 	gDCC_PWMBackup.backupRdy 	= false;
@@ -97,7 +96,6 @@ SYSCONFIG_WEAK void SYSCFG_DL_initPower(void)
     DL_I2C_reset(OLED_INST);
     DL_UART_Main_reset(PRINT_INST);
     DL_UART_Main_reset(DCC101_v1_2_INST);
-    DL_UART_Main_reset(DCC101_v1_3_INST);
     DL_UART_Main_reset(K230_INST);
 
     DL_GPIO_enablePower(GPIOA);
@@ -106,7 +104,6 @@ SYSCONFIG_WEAK void SYSCFG_DL_initPower(void)
     DL_I2C_enablePower(OLED_INST);
     DL_UART_Main_enablePower(PRINT_INST);
     DL_UART_Main_enablePower(DCC101_v1_2_INST);
-    DL_UART_Main_enablePower(DCC101_v1_3_INST);
     DL_UART_Main_enablePower(K230_INST);
     delay_cycles(POWER_STARTUP_DELAY);
 }
@@ -140,10 +137,6 @@ SYSCONFIG_WEAK void SYSCFG_DL_GPIO_init(void)
         GPIO_DCC101_v1_2_IOMUX_TX, GPIO_DCC101_v1_2_IOMUX_TX_FUNC);
     DL_GPIO_initPeripheralInputFunction(
         GPIO_DCC101_v1_2_IOMUX_RX, GPIO_DCC101_v1_2_IOMUX_RX_FUNC);
-    DL_GPIO_initPeripheralOutputFunction(
-        GPIO_DCC101_v1_3_IOMUX_TX, GPIO_DCC101_v1_3_IOMUX_TX_FUNC);
-    DL_GPIO_initPeripheralInputFunction(
-        GPIO_DCC101_v1_3_IOMUX_RX, GPIO_DCC101_v1_3_IOMUX_RX_FUNC);
     DL_GPIO_initPeripheralOutputFunction(
         GPIO_K230_IOMUX_TX, GPIO_K230_IOMUX_TX_FUNC);
     DL_GPIO_initPeripheralInputFunction(
@@ -426,37 +419,6 @@ SYSCONFIG_WEAK void SYSCFG_DL_DCC101_v1_2_init(void)
 
 
     DL_UART_Main_enable(DCC101_v1_2_INST);
-}
-static const DL_UART_Main_ClockConfig gDCC101_v1_3ClockConfig = {
-    .clockSel    = DL_UART_MAIN_CLOCK_BUSCLK,
-    .divideRatio = DL_UART_MAIN_CLOCK_DIVIDE_RATIO_1
-};
-
-static const DL_UART_Main_Config gDCC101_v1_3Config = {
-    .mode        = DL_UART_MAIN_MODE_NORMAL,
-    .direction   = DL_UART_MAIN_DIRECTION_TX_RX,
-    .flowControl = DL_UART_MAIN_FLOW_CONTROL_NONE,
-    .parity      = DL_UART_MAIN_PARITY_NONE,
-    .wordLength  = DL_UART_MAIN_WORD_LENGTH_8_BITS,
-    .stopBits    = DL_UART_MAIN_STOP_BITS_ONE
-};
-
-SYSCONFIG_WEAK void SYSCFG_DL_DCC101_v1_3_init(void)
-{
-    DL_UART_Main_setClockConfig(DCC101_v1_3_INST, (DL_UART_Main_ClockConfig *) &gDCC101_v1_3ClockConfig);
-
-    DL_UART_Main_init(DCC101_v1_3_INST, (DL_UART_Main_Config *) &gDCC101_v1_3Config);
-    /*
-     * Configure baud rate by setting oversampling and baud rate divisors.
-     *  Target baud rate: 115200
-     *  Actual baud rate: 115190.78
-     */
-    DL_UART_Main_setOversampling(DCC101_v1_3_INST, DL_UART_OVERSAMPLING_RATE_16X);
-    DL_UART_Main_setBaudRateDivisor(DCC101_v1_3_INST, DCC101_v1_3_IBRD_40_MHZ_115200_BAUD, DCC101_v1_3_FBRD_40_MHZ_115200_BAUD);
-
-
-
-    DL_UART_Main_enable(DCC101_v1_3_INST);
 }
 static const DL_UART_Main_ClockConfig gK230ClockConfig = {
     .clockSel    = DL_UART_MAIN_CLOCK_BUSCLK,
