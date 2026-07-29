@@ -1,13 +1,13 @@
 #include "GC.h"
 
 /* 电机正向持续标志：PB9或PA16按住=1，松开=0 */
-volatile uint8_t motor1_forward_active = 0;
+volatile uint8_t btn1_active = 0;   /* PB9  */
 
-/* 电机反向持续标志：PB8或PA15按住=1，松开=0 */
-volatile uint8_t motor1_reverse_active = 0;
+volatile uint8_t btn2_active = 0;   /* PB8  */
 
-void key6_init();
+volatile uint8_t btn3_active = 0;   /* PA16 */
 
+volatile uint8_t btn4_active = 0;   /* PA15 */
 /**
  * @brief  驱动步进电机滚动指定角度
  * @param  roll  滚动角度值，正值为正向旋转，负值为反向旋转
@@ -168,10 +168,10 @@ int32_t dianji_get_angle(void)
 /**
  * @brief  定时器PWM中断处理（4路按键电平消抖扫描）
  *
- * PB9  → motor1_forward_active  (电机正向)
- * PB8  → motor1_reverse_active  (电机反向)
- * PA16 → motor1_forward_active  (电机正向)
- * PA15 → motor1_reverse_active  (电机反向)
+ * PB9  → btn1_active  (按键1)
+ * PB8  → btn2_active  (按键2)
+ * PA16 → btn3_active  (按键3)
+ * PA15 → btn4_active  (按键4)
  */
 void DCC_PWM_INST_IRQHandler()
 {
@@ -241,10 +241,10 @@ void DCC_PWM_INST_IRQHandler()
             }
 
             /* 任意正向按键 → 电机正转，任意反向按键 → 电机反转 */
-            motor1_forward_active = btn_stable || btn3_stable;
-            motor1_reverse_active = btn2_stable || btn4_stable;
-
-            break;
+            btn1_active = btn_stable;
+            btn2_active = btn2_stable;
+            btn3_active = btn3_stable;
+            btn4_active = btn4_stable;
         }
 
         default:

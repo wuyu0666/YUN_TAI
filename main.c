@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2021, Texas Instruments Incorporated
  * All rights reserved.
  *
@@ -37,8 +37,8 @@ uint8_t DCC_v1_2[50]={0};
 volatile uint8_t  bujin_x;
 volatile uint8_t  dir_x;
 volatile uint16_t pulse_x;
-volatile int32_t  motor_angle = 0;    /* 累计旋转角度（度） */
-volatile int32_t  motor_pulse = 0;    /* 累计脉冲数 */
+volatile int32_t  motor_angle = 0;    /* 累积旋转角度（度）*/
+volatile int32_t  motor_pulse = 0;    /* 累积脉冲数 */
 
 static PID_Inc_t pid_x;
 static char disp_buf[32];             /* OLED 显示缓冲区 */
@@ -57,24 +57,29 @@ int main(void){
     delay_ms(200);
 
     /* ====== 步进电机开机自检 ====== */
-    OLED_ShowString(0, 0, (u8 *)"Test: +90  ", 12);
-    OLED_Refresh();
-    dianji_rotate_to(90);
-    delay_ms(3000);
+    OLED_ShowString(0, 0, (u8 *)"Tst:+090    ", 12); OLED_Refresh();
+    dianji_rotate_to(90);   delay_ms(1500);
 
-    OLED_ShowString(0, 0, (u8 *)"Test: -45  ", 12);
-    OLED_Refresh();
-    dianji_rotate_to(-45);
-    delay_ms(3000);
+    OLED_ShowString(0, 0, (u8 *)"Tst:-045    ", 12); OLED_Refresh();
+    dianji_rotate_to(-45);  delay_ms(1500);
 
-    OLED_ShowString(0, 0, (u8 *)"Test:   0  ", 12);
-    OLED_Refresh();
-    dianji_rotate_to(0);
-    delay_ms(2000);
+    OLED_ShowString(0, 0, (u8 *)"Tst:+180    ", 12); OLED_Refresh();
+    dianji_rotate_to(180);  delay_ms(1500);
 
-    OLED_ShowString(0, 0, (u8 *)"Test: Done", 12);
-    OLED_Refresh();
-    delay_ms(1000);
+    OLED_ShowString(0, 0, (u8 *)"Tst:-180    ", 12); OLED_Refresh();
+    dianji_rotate_to(-180); delay_ms(1500);
+
+    OLED_ShowString(0, 0, (u8 *)"Tst:+270    ", 12); OLED_Refresh();
+    dianji_rotate_to(270);  delay_ms(1500);
+
+    OLED_ShowString(0, 0, (u8 *)"Tst:-270    ", 12); OLED_Refresh();
+    dianji_rotate_to(-270); delay_ms(1500);
+
+    OLED_ShowString(0, 0, (u8 *)"Tst:+030    ", 12); OLED_Refresh();
+    dianji_rotate_to(30);   delay_ms(1500);
+
+    OLED_ShowString(0, 0, (u8 *)"Tst:Finish  ", 12); OLED_Refresh();
+    dianji_rotate_to(0);    delay_ms(1200);
 
 
     while (1) {
@@ -95,9 +100,11 @@ int main(void){
         OLED_ShowString(0, 16, (u8 *)disp_buf, 12);
 
         /* 第3行：按键状态 */
-        if (motor1_forward_active)      OLED_ShowString(0, 32, (u8 *)"Btn:FWD", 12);
-        else if (motor1_reverse_active) OLED_ShowString(0, 32, (u8 *)"Btn:REV", 12);
-        else                            OLED_ShowString(0, 32, (u8 *)"Btn:---", 12);
+        if (btn1_active)                OLED_ShowString(0, 32, (u8 *)"Btn1:SET0 ", 12);
+        else if (btn2_active)           OLED_ShowString(0, 32, (u8 *)"Btn2:---- ", 12);
+        else if (btn3_active)           OLED_ShowString(0, 32, (u8 *)"Btn3:---- ", 12);
+        else if (btn4_active)           OLED_ShowString(0, 32, (u8 *)"Btn4:---- ", 12);
+        else                            OLED_ShowString(0, 32, (u8 *)"Btn :---- ", 12);
 
         /* 第4行：K230 反馈数据 */
         if (bujin_x == 1) {
@@ -108,18 +115,13 @@ int main(void){
         }
         OLED_Refresh();
 
-        /* ---- 按键手动控制 ---- */
-        if (motor1_forward_active)  {
-            dianji_roll(30);
-            motor_angle += 30;
-            motor_pulse += (int32_t)(jiaodu * 30);
-            delay_ms(80);
-        }
-        if (motor1_reverse_active)  {
-            dianji_roll(-30);
-            motor_angle -= 30;
-            motor_pulse -= (int32_t)(jiaodu * 30);
-            delay_ms(80);
+        /* ---- 按键1：较零（上升沿触发） ---- */
+        {
+            static uint8_t btn1_prev = 0;
+            if (btn1_active && !btn1_prev) {
+                dianji_set_origin();
+            }
+            btn1_prev = btn1_active;
         }
 
         /* ---- K230 视觉伺服 PID ---- */
