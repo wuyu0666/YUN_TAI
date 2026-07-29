@@ -37,11 +37,12 @@ uint8_t DCC_v1_2[50]={0};
 volatile uint8_t  bujin_x;
 volatile uint8_t  dir_x;
 volatile uint16_t pulse_x;
-volatile int32_t  motor_angle = 0;    /* 累积旋转角度（度）*/
+volatile int32_t  motor_angle = 0;    /* 电机返回的实际角度 */
 volatile int32_t  motor_pulse = 0;    /* 累积脉冲数 */
+volatile int16_t  motor_target = 0;   /* 目标角度（钳位前） */
 
 static PID_Inc_t pid_x;
-static char disp_buf[32];             /* OLED 显示缓冲区 */
+static char disp_buf[32];
 
 int main(void){
     SYSCFG_DL_init();
@@ -56,30 +57,28 @@ int main(void){
     dianji_set_origin();
     delay_ms(200);
 
-    /* ====== 步进电机开机自检 ====== */
-    OLED_ShowString(0, 0, (u8 *)"Tst:+090    ", 12); OLED_Refresh();
-    dianji_rotate_to(90);   delay_ms(1500);
+    /* ====== 步进电机开机自检（含超限钳位测试） ====== */
+    motor_target = 5;
+    OLED_ShowString(0, 0, (u8 *)"Tst:+005    ", 12); OLED_Refresh();
+    dianji_rotate_to(motor_target);  delay_ms(1200);
 
-    OLED_ShowString(0, 0, (u8 *)"Tst:-045    ", 12); OLED_Refresh();
-    dianji_rotate_to(-45);  delay_ms(1500);
+    motor_target = -5;
+    OLED_ShowString(0, 0, (u8 *)"Tst:-005    ", 12); OLED_Refresh();
+    dianji_rotate_to(motor_target);  delay_ms(1200);
 
-    OLED_ShowString(0, 0, (u8 *)"Tst:+180    ", 12); OLED_Refresh();
-    dianji_rotate_to(180);  delay_ms(1500);
+    /* 超限：+10° → 钳到+5° */
+    motor_target = 10;
+    OLED_ShowString(0, 0, (u8 *)"Tst:+010>+5", 12); OLED_Refresh();
+    dianji_rotate_to(motor_target);  delay_ms(1500);
 
-    OLED_ShowString(0, 0, (u8 *)"Tst:-180    ", 12); OLED_Refresh();
-    dianji_rotate_to(-180); delay_ms(1500);
+    /* 超限：-8° → 钳到-5° */
+    motor_target = -8;
+    OLED_ShowString(0, 0, (u8 *)"Tst:-008>-5", 12); OLED_Refresh();
+    dianji_rotate_to(motor_target);  delay_ms(1500);
 
-    OLED_ShowString(0, 0, (u8 *)"Tst:+270    ", 12); OLED_Refresh();
-    dianji_rotate_to(270);  delay_ms(1500);
-
-    OLED_ShowString(0, 0, (u8 *)"Tst:-270    ", 12); OLED_Refresh();
-    dianji_rotate_to(-270); delay_ms(1500);
-
-    OLED_ShowString(0, 0, (u8 *)"Tst:+030    ", 12); OLED_Refresh();
-    dianji_rotate_to(30);   delay_ms(1500);
-
+    motor_target = 0;
     OLED_ShowString(0, 0, (u8 *)"Tst:Finish  ", 12); OLED_Refresh();
-    dianji_rotate_to(0);    delay_ms(1200);
+    dianji_rotate_to(motor_target);  delay_ms(800);
 
 
     while (1) {
@@ -90,13 +89,12 @@ int main(void){
 
 
         /* ========== OLED 显示 ========== */
-        /* 第1行：方向 + 累计角度 */
-        OLED_ShowString(0, 0, (u8 *)"Dir:CW ", 12);
-        sprintf(disp_buf, "Ang:%6ld", (long)motor_angle);
-        OLED_ShowString(54, 0, (u8 *)disp_buf, 12);
+        /* 第1行：目标角度 */
+        sprintf(disp_buf, "Tgt:%+05d", motor_target);
+        OLED_ShowString(0, 0, (u8 *)disp_buf, 12);
 
-        /* 第2行：累计脉冲数 */
-        sprintf(disp_buf, "Pls:%6ld", (long)motor_pulse);
+        /* 第2行：实际角度 */
+        sprintf(disp_buf, "Act:%+05d", (int)motor_angle);
         OLED_ShowString(0, 16, (u8 *)disp_buf, 12);
 
         /* 第3行：按键状态 */
@@ -106,7 +104,7 @@ int main(void){
         else if (btn4_active)           OLED_ShowString(0, 32, (u8 *)"Btn4:---- ", 12);
         else                            OLED_ShowString(0, 32, (u8 *)"Btn :---- ", 12);
 
-        /* 第4行：K230 反馈数据 */
+        /* 第4行：K230 反馈 */
         if (bujin_x == 1) {
             sprintf(disp_buf, "FB:%c%-5u", (dir_x==0x01)?'+':'-', pulse_x);
             OLED_ShowString(0, 48, (u8 *)disp_buf, 12);
@@ -119,6 +117,7 @@ int main(void){
         {
             static uint8_t btn1_prev = 0;
             if (btn1_active && !btn1_prev) {
+                motor_target = 0;
                 dianji_set_origin();
             }
             btn1_prev = btn1_active;

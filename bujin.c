@@ -116,6 +116,9 @@ void dianji_set_origin(void)
  */
 void dianji_rotate_to(int16_t angle)
 {
+    /* 限幅 ±ANGLE_LIMIT 度 */
+    if(angle > ANGLE_LIMIT)  angle = ANGLE_LIMIT;
+    if(angle < -ANGLE_LIMIT) angle = -ANGLE_LIMIT;
     /* 目标角度归一化到 [0, 360) */
     int16_t target = angle % 360;
     if(target < 0) target += 360;

@@ -1,7 +1,7 @@
 ******************************************************************************
             TI ARM Clang Linker PC v4.0.4                      
 ******************************************************************************
->> Linked Wed Jul 29 21:45:48 2026
+>> Linked Wed Jul 29 22:24:55 2026
 
 OUTPUT FILE NAME:   <DCC_101_v1.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 00002ad5
@@ -11,8 +11,8 @@ MEMORY CONFIGURATION
 
          name            origin    length      used     unused   attr    fill
 ----------------------  --------  ---------  --------  --------  ----  --------
-  FLASH                 00000000   00020000  00004c08  0001b3f8  R  X
-  SRAM                  20200000   00008000  00000809  000077f7  RW X
+  FLASH                 00000000   00020000  00004bd8  0001b428  R  X
+  SRAM                  20200000   00008000  0000080b  000077f5  RW X
   BCR_CONFIG            41c00000   000000ff  00000000  000000ff  R   
   BSL_CONFIG            41c00100   00000080  00000000  00000080  R   
 
@@ -24,12 +24,12 @@ run origin  load origin   length   init length attrs members
 00000000    00000000    000031c8   000031c8    r-x
   00000000    00000000    000000c0   000000c0    r-- .intvecs
   000000c0    000000c0    00003108   00003108    r-x .text
-000031d0    000031d0    00001a40   00001a40    r--
-  000031d0    000031d0    00001a10   00001a10    r-- .rodata
-  00004be0    00004be0    00000030   00000030    r-- .cinit
-20200000    20200000    0000060c   00000000    rw-
+000031d0    000031d0    00001a10   00001a10    r--
+  000031d0    000031d0    000019e0   000019e0    r-- .rodata
+  00004bb0    00004bb0    00000030   00000030    r-- .cinit
+20200000    20200000    0000060e   00000000    rw-
   20200000    20200000    000005bd   00000000    rw- .bss
-  202005c0    202005c0    0000004c   00000000    rw- .data
+  202005c0    202005c0    0000004e   00000000    rw- .data
 20207e00    20207e00    00000200   00000000    rw-
   20207e00    20207e00    00000200   00000000    rw- .stack
 
@@ -44,8 +44,8 @@ section   page    origin      length       input sections
 
 .text      0    000000c0    00003108     
                   000000c0    00000868     libc.a : _printfi.c.obj (.text:__TI_printfi_nofloat)
-                  00000928    0000037c     main.o (.text.main)
-                  00000ca4    00000194     bujin.o (.text.dianji_rotate_to)
+                  00000928    0000034c     main.o (.text.main)
+                  00000c74    000001c4     bujin.o (.text.dianji_rotate_to)
                   00000e38    00000184     bujin.o (.text.TIMA0_IRQHandler)
                   00000fbc    00000158     oled.o (.text.OLED_ShowChar)
                   00001114    00000104     driverlib.a : dl_timer.o (.text.DL_Timer_initFourCCPWMMode)
@@ -207,14 +207,14 @@ section   page    origin      length       input sections
                   000031be    00000004     libc.a : pre_init.c.obj (.text._system_pre_init)
                   000031c2    00000006     --HOLE-- [fill = 0]
 
-.cinit     0    00004be0    00000030     
-                  00004be0    0000000c     (__TI_handler_table)
-                  00004bec    00000008     (.cinit..bss.load) [load image, compression = zero_init]
-                  00004bf4    00000008     (.cinit..data.load) [load image, compression = lzss]
-                  00004bfc    00000010     (__TI_cinit_table)
-                  00004c0c    00000004     --HOLE-- [fill = 0]
+.cinit     0    00004bb0    00000030     
+                  00004bb0    0000000c     (__TI_handler_table)
+                  00004bbc    00000008     (.cinit..bss.load) [load image, compression = zero_init]
+                  00004bc4    00000008     (.cinit..data.load) [load image, compression = lzss]
+                  00004bcc    00000010     (__TI_cinit_table)
+                  00004bdc    00000004     --HOLE-- [fill = 0]
 
-.rodata    0    000031d0    00001a10     
+.rodata    0    000031d0    000019e0     
                   000031d0    00000d5c     oled.o (.rodata.asc2_2412)
                   00003f2c    000005f0     oled.o (.rodata.asc2_1608)
                   0000451c    00000474     oled.o (.rodata.asc2_1206)
@@ -223,35 +223,30 @@ section   page    origin      length       input sections
                   00004a94    00000028     ti_msp_dl_config.o (.rodata.gSYSPLLConfig)
                   00004abc    00000011     libc.a : _printfi.c.obj (.rodata.str1.10348868589481759720.1)
                   00004acd    00000011            : _printfi.c.obj (.rodata.str1.15363888844622738466.1)
-                  00004ade    0000000d     main.o (.rodata.str1.12180500075719773345.1)
-                  00004aeb    0000000d     main.o (.rodata.str1.14112174005742061988.1)
-                  00004af8    0000000d     main.o (.rodata.str1.15159059442110792349.1)
-                  00004b05    0000000d     main.o (.rodata.str1.17100691992556644108.1)
-                  00004b12    0000000d     main.o (.rodata.str1.18227636981041470289.1)
-                  00004b1f    0000000d     main.o (.rodata.str1.2846389346932560359.1)
-                  00004b2c    0000000d     main.o (.rodata.str1.288608917962107522.1)
-                  00004b39    0000000d     main.o (.rodata.str1.8154729771448623357.1)
-                  00004b46    0000000b     main.o (.rodata.str1.11870794119293528247.1)
-                  00004b51    0000000b     main.o (.rodata.str1.14402440632258215044.1)
-                  00004b5c    0000000b     main.o (.rodata.str1.2123964117280943167.1)
-                  00004b67    0000000b     main.o (.rodata.str1.8108965883388295311.1)
-                  00004b72    0000000b     main.o (.rodata.str1.9059077390166914652.1)
-                  00004b7d    00000001     --HOLE-- [fill = 0]
-                  00004b7e    0000000a     ti_msp_dl_config.o (.rodata.gDCC101_v1_2Config)
-                  00004b88    0000000a     ti_msp_dl_config.o (.rodata.gK230Config)
-                  00004b92    0000000a     ti_msp_dl_config.o (.rodata.gPRINTConfig)
-                  00004b9c    0000000a     main.o (.rodata.str1.8076846746581808073.1)
-                  00004ba6    00000009     main.o (.rodata.str1.14079361385603432444.1)
-                  00004baf    00000009     main.o (.rodata.str1.15996357275703397564.1)
-                  00004bb8    00000009     main.o (.rodata.str1.16265332423659789559.1)
-                  00004bc1    00000002     ti_msp_dl_config.o (.rodata.gDCC101_v1_2ClockConfig)
-                  00004bc3    00000001     --HOLE-- [fill = 0]
-                  00004bc4    00000008     ti_msp_dl_config.o (.rodata.gDCC_PWMConfig)
-                  00004bcc    00000008     main.o (.rodata.str1.7702501944640899365.1)
-                  00004bd4    00000002     ti_msp_dl_config.o (.rodata.gK230ClockConfig)
-                  00004bd6    00000002     ti_msp_dl_config.o (.rodata.gOLEDClockConfig)
-                  00004bd8    00000002     ti_msp_dl_config.o (.rodata.gPRINTClockConfig)
-                  00004bda    00000006     --HOLE-- [fill = 0]
+                  00004ade    0000000d     main.o (.rodata.str1.15159059442110792349.1)
+                  00004aeb    0000000d     main.o (.rodata.str1.2846389346932560359.1)
+                  00004af8    0000000d     main.o (.rodata.str1.8154729771448623357.1)
+                  00004b05    0000000c     main.o (.rodata.str1.17100691992556644108.1)
+                  00004b11    0000000c     main.o (.rodata.str1.18227636981041470289.1)
+                  00004b1d    0000000b     main.o (.rodata.str1.14112174005742061988.1)
+                  00004b28    0000000b     main.o (.rodata.str1.14402440632258215044.1)
+                  00004b33    0000000b     main.o (.rodata.str1.15996357275703397564.1)
+                  00004b3e    0000000b     main.o (.rodata.str1.16265332423659789559.1)
+                  00004b49    0000000b     main.o (.rodata.str1.7702501944640899365.1)
+                  00004b54    0000000a     ti_msp_dl_config.o (.rodata.gDCC101_v1_2Config)
+                  00004b5e    0000000a     ti_msp_dl_config.o (.rodata.gK230Config)
+                  00004b68    0000000a     ti_msp_dl_config.o (.rodata.gPRINTConfig)
+                  00004b72    0000000a     main.o (.rodata.str1.12180500075719773345.1)
+                  00004b7c    0000000a     main.o (.rodata.str1.2123964117280943167.1)
+                  00004b86    0000000a     main.o (.rodata.str1.288608917962107522.1)
+                  00004b90    00000009     main.o (.rodata.str1.9059077390166914652.1)
+                  00004b99    00000002     ti_msp_dl_config.o (.rodata.gDCC101_v1_2ClockConfig)
+                  00004b9b    00000001     --HOLE-- [fill = 0]
+                  00004b9c    00000008     ti_msp_dl_config.o (.rodata.gDCC_PWMConfig)
+                  00004ba4    00000002     ti_msp_dl_config.o (.rodata.gK230ClockConfig)
+                  00004ba6    00000002     ti_msp_dl_config.o (.rodata.gOLEDClockConfig)
+                  00004ba8    00000002     ti_msp_dl_config.o (.rodata.gPRINTClockConfig)
+                  00004baa    00000006     --HOLE-- [fill = 0]
 
 .init_array 
 *          0    00000000    00000000     UNINITIALIZED
@@ -269,25 +264,26 @@ section   page    origin      length       input sections
                   202005ba    00000002     (.common:pulse_x)
                   202005bc    00000001     (.common:dir_x)
 
-.data      0    202005c0    0000004c     UNINITIALIZED
+.data      0    202005c0    0000004e     UNINITIALIZED
                   202005c0    00000032     main.o (.data.DCC_v1_2)
-                  202005f2    00000001     bujin.o (.data.TIMA0_IRQHandler.btn2_cnt)
-                  202005f3    00000001     bujin.o (.data.TIMA0_IRQHandler.btn2_stable)
+                  202005f2    00000002     main.o (.data.motor_target)
                   202005f4    00000004     libc.a : aeabi_portable.c.obj (.data.__aeabi_errno)
                   202005f8    00000004     main.o (.data.motor_angle)
                   202005fc    00000004     main.o (.data.motor_pulse)
-                  20200600    00000001     bujin.o (.data.TIMA0_IRQHandler.btn3_cnt)
-                  20200601    00000001     bujin.o (.data.TIMA0_IRQHandler.btn3_stable)
-                  20200602    00000001     bujin.o (.data.TIMA0_IRQHandler.btn4_cnt)
-                  20200603    00000001     bujin.o (.data.TIMA0_IRQHandler.btn4_stable)
-                  20200604    00000001     bujin.o (.data.TIMA0_IRQHandler.btn_cnt)
-                  20200605    00000001     bujin.o (.data.TIMA0_IRQHandler.btn_stable)
-                  20200606    00000001     bujin.o (.data.btn1_active)
-                  20200607    00000001     bujin.o (.data.btn2_active)
-                  20200608    00000001     bujin.o (.data.btn3_active)
-                  20200609    00000001     bujin.o (.data.btn4_active)
-                  2020060a    00000001     main.o (.data.main.btn1_prev)
-                  2020060b    00000001     uart.o (.data.rx_idx)
+                  20200600    00000001     bujin.o (.data.TIMA0_IRQHandler.btn2_cnt)
+                  20200601    00000001     bujin.o (.data.TIMA0_IRQHandler.btn2_stable)
+                  20200602    00000001     bujin.o (.data.TIMA0_IRQHandler.btn3_cnt)
+                  20200603    00000001     bujin.o (.data.TIMA0_IRQHandler.btn3_stable)
+                  20200604    00000001     bujin.o (.data.TIMA0_IRQHandler.btn4_cnt)
+                  20200605    00000001     bujin.o (.data.TIMA0_IRQHandler.btn4_stable)
+                  20200606    00000001     bujin.o (.data.TIMA0_IRQHandler.btn_cnt)
+                  20200607    00000001     bujin.o (.data.TIMA0_IRQHandler.btn_stable)
+                  20200608    00000001     bujin.o (.data.btn1_active)
+                  20200609    00000001     bujin.o (.data.btn2_active)
+                  2020060a    00000001     bujin.o (.data.btn3_active)
+                  2020060b    00000001     bujin.o (.data.btn4_active)
+                  2020060c    00000001     main.o (.data.main.btn1_prev)
+                  2020060d    00000001     uart.o (.data.rx_idx)
 
 .stack     0    20207e00    00000200     UNINITIALIZED
                   20207e00    00000004     libc.a : boot_cortex_m.c.obj (.stack)
@@ -306,15 +302,15 @@ MODULE SUMMARY
     .\
        oled.o                         1516    6080      1152   
        ti_msp_dl_config.o             2582    89        236    
-       main.o                         936     204       135    
-       bujin.o                        1170    0         12     
+       bujin.o                        1218    0         12     
+       main.o                         888     157       137    
        key.o                          354     0         0      
        bihuan_pid.o                   332     0         0      
        uart.o                         290     0         6      
        startup_mspm0g350x_ticlang.o   8       192       0      
        delay.o                        28      0         0      
     +--+------------------------------+-------+---------+---------+
-       Total:                         7216    6565      1541   
+       Total:                         7216    6518      1543   
                                                                
     C:/ti/mspm0_sdk_2_10_00_04/source/ti/driverlib/lib/ticlang/m0p/mspm0g1x0x_g3x0x/driverlib.a
        dl_sysctl_mspm0g1x0x_g3x0x.o   416     0         0      
@@ -377,19 +373,19 @@ MODULE SUMMARY
        Stack:                         0       0         512    
        Linker Generated:              0       44        0      
     +--+------------------------------+-------+---------+---------+
-       Grand Total:                   12526   6900      2057   
+       Grand Total:                   12526   6853      2059   
 
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 00004bfc records: 2, size/record: 8, table size: 16
-	.bss: load addr=00004bec, load size=00000008 bytes, run addr=20200000, run size=000005bd bytes, compression=zero_init
-	.data: load addr=00004bf4, load size=00000008 bytes, run addr=202005c0, run size=0000004c bytes, compression=lzss
+__TI_cinit_table @ 00004bcc records: 2, size/record: 8, table size: 16
+	.bss: load addr=00004bbc, load size=00000008 bytes, run addr=20200000, run size=000005bd bytes, compression=zero_init
+	.data: load addr=00004bc4, load size=00000008 bytes, run addr=202005c0, run size=0000004e bytes, compression=lzss
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 00004be0 records: 3, size/record: 4, table size: 12
+__TI_handler_table @ 00004bb0 records: 3, size/record: 4, table size: 12
 	index: 0, handler: __TI_decompress_lzss
 	index: 1, handler: __TI_decompress_none
 	index: 2, handler: __TI_zero_init
@@ -486,11 +482,11 @@ address   name
 00000000  __TI_ATRegion2_region_sz             
 00000000  __TI_ATRegion2_src_addr              
 00000000  __TI_ATRegion2_trg_addr              
-00004bfc  __TI_CINIT_Base                      
-00004c0c  __TI_CINIT_Limit                     
-00004c0c  __TI_CINIT_Warm                      
-00004be0  __TI_Handler_Table_Base              
-00004bec  __TI_Handler_Table_Limit             
+00004bcc  __TI_CINIT_Base                      
+00004bdc  __TI_CINIT_Limit                     
+00004bdc  __TI_CINIT_Warm                      
+00004bb0  __TI_Handler_Table_Base              
+00004bbc  __TI_Handler_Table_Limit             
 000027c5  __TI_auto_init_nobinit_nopinit       
 00001d2d  __TI_decompress_lzss                 
 000030c5  __TI_decompress_none                 
@@ -580,14 +576,14 @@ UNDEFED   _system_post_cinit
 000031d0  asc2_2412                            
 00002695  atoi                                 
 ffffffff  binit                                
-20200606  btn1_active                          
-20200607  btn2_active                          
-20200608  btn3_active                          
-20200609  btn4_active                          
+20200608  btn1_active                          
+20200609  btn2_active                          
+2020060a  btn3_active                          
+2020060b  btn4_active                          
 202005b9  bujin_x                              
 00002d8d  delay_ms                             
 000017a1  dianji1_pulse                        
-00000ca5  dianji_rotate_to                     
+00000c75  dianji_rotate_to                     
 00001b05  dianji_set_origin                    
 202005bc  dir_x                                
 20200480  gDCC_PWMBackup                       
@@ -599,6 +595,7 @@ ffffffff  binit
 00002bb5  memccpy                              
 202005f8  motor_angle                          
 202005fc  motor_pulse                          
+202005f2  motor_target                         
 202005ba  pulse_x                              
 000028b1  sprintf                              
 00003119  wcslen                               
@@ -622,7 +619,7 @@ address   name
 000000c1  __TI_printfi_nofloat                 
 00000200  __STACK_SIZE                         
 00000929  main                                 
-00000ca5  dianji_rotate_to                     
+00000c75  dianji_rotate_to                     
 00000e39  TIMA0_IRQHandler                     
 00000fbd  OLED_ShowChar                        
 00001115  DL_Timer_initFourCCPWMMode           
@@ -779,11 +776,11 @@ address   name
 0000451c  asc2_1206                            
 00004990  __aeabi_ctype_table_                 
 00004990  __aeabi_ctype_table_C                
-00004be0  __TI_Handler_Table_Base              
-00004bec  __TI_Handler_Table_Limit             
-00004bfc  __TI_CINIT_Base                      
-00004c0c  __TI_CINIT_Limit                     
-00004c0c  __TI_CINIT_Warm                      
+00004bb0  __TI_Handler_Table_Base              
+00004bbc  __TI_Handler_Table_Limit             
+00004bcc  __TI_CINIT_Base                      
+00004bdc  __TI_CINIT_Limit                     
+00004bdc  __TI_CINIT_Warm                      
 20200000  OLED_GRAM                            
 20200000  __start___llvm_prf_bits              
 20200000  __start___llvm_prf_cnts              
@@ -795,13 +792,14 @@ address   name
 202005ba  pulse_x                              
 202005bc  dir_x                                
 202005c0  DCC_v1_2                             
+202005f2  motor_target                         
 202005f4  __aeabi_errno                        
 202005f8  motor_angle                          
 202005fc  motor_pulse                          
-20200606  btn1_active                          
-20200607  btn2_active                          
-20200608  btn3_active                          
-20200609  btn4_active                          
+20200608  btn1_active                          
+20200609  btn2_active                          
+2020060a  btn3_active                          
+2020060b  btn4_active                          
 20207e00  __stack                              
 20208000  __STACK_END                          
 ffffffff  __TI_pprof_out_hndl                  
@@ -812,4 +810,4 @@ ffffffff  binit
 UNDEFED   __mpu_init                           
 UNDEFED   _system_post_cinit                   
 
-[203 symbols]
+[204 symbols]

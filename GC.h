@@ -3,47 +3,48 @@
 
 /**
  * @file    GC.h
- * @brief   閸忋劌鐪径瀛樻瀮娴犺埖鐪归幀?
+ * @brief   闁稿繈鍔岄惇顒佸緞鐎涙ɑ鐎ù鐘哄煐閻綊骞€?
  *
- * 缂佺喍绔撮崠鍛儓閹碘偓閺堝銆嶉惄顔荤贩鐠ф牔绗岄崗銊ョ湰閸欐﹢鍣烘竟鐗堟閿涘苯鍙炬禒鏍ㄧ爱閺傚洣娆㈤崣顏堟付 #include "GC.h"
+ * 缂備胶鍠嶇粩鎾礌閸涱厽鍎撻柟纰樺亾闁哄牆顦甸妴宥夋儎椤旇崵璐╅悹褎鐗旂粭宀勫礂閵娿儳婀伴柛娆愶耿閸ｇ儤绔熼悧鍫燁潠闁挎稑鑻崣鐐閺嶃劎鐖遍柡鍌氭矗濞嗐垽宕ｉ鍫熶粯 #include "GC.h"
  */
 
-/* ====== 绾兛娆㈡す鍗炲З闁板秶鐤嗛敍鍦珁sConfig 閼奉亜濮╅悽鐔稿灇閿?====== */
-#include "ti_msp_dl_config.h"       /* MSPM0 婢舵牞顔曢柊宥囩枂閿涙PIO/UART/PWM/閺冨爼鎸?*/
+/* ====== 缁绢収鍏涘▎銏°仚閸楃偛袟闂佹澘绉堕悿鍡涙晬閸︾弫sConfig 闁煎浜滄慨鈺呮偨閻旂鐏囬柨?====== */
+#include "ti_msp_dl_config.h"       /* MSPM0 濠㈣埖鐗為鏇㈡煀瀹ュ洨鏋傞柨娑欘儞PIO/UART/PWM/闁哄啫鐖奸幐?*/
 
-/* ====== 閸╄櫣顢呭銉ュ徔濡€虫健 ====== */
-#include "delay.h"                  /* 濮ｎ偆顫楃痪褍娆㈤弮璺哄毐閺?delay_ms() */
-#include "uart.h"                   /* 娑撴彃褰涢弨璺哄絺閿涙瓗ART_send_char/string/buffer */
+/* ====== 闁糕晞娅ｉ、鍛啅閵夈儱寰旀俊顖椻偓铏仴 ====== */
+#include "delay.h"                  /* 婵綆鍋嗛～妤冪棯瑜嶅▎銏ゅ籍鐠哄搫姣愰柡?delay_ms() */
+#include "uart.h"                   /* 濞戞挻褰冭ぐ娑㈠绩鐠哄搫绲洪柨娑欑摋ART_send_char/string/buffer */
 
-/* ====== 閹稿鏁Ο鈥虫健 ====== */
-#include "key.h"                    /* 閹稿鏁?(PB9)閿涙et_key_state / key_read / key6_init */
+/* ====== 闁圭顦甸弫顓炍熼垾铏仴 ====== */
+#include "key.h"                    /* 闁圭顦甸弫?(PB9)闁挎稒顒歟t_key_state / key_read / key6_init */
 
-/* ====== 濮濄儴绻橀悽鍨簚閹貉冨煑濡€虫健 ====== */
-#include "bujin.h"                  /* 閻㈠灚婧€1(UART2/PA21/PA22)閿涙瓰ianji_roll() */
+/* ====== 婵縿鍎寸换姗€鎮介崹顐ｇ皻闁硅矇鍐ㄧ厬婵☆垪鈧櫕鍋?====== */
+#include "bujin.h"                  /* 闁汇垹鐏氬┃鈧?(UART2/PA21/PA22)闁挎稒鐡癷anji_roll() */
 
-/* ====== PID 閹貉冨煑濡€虫健 ====== */
-#include "bihuan_pid.h"             /* 婢х偤鍣哄?PID 閹貉冨煑閸?*/
+/* ====== PID 闁硅矇鍐ㄧ厬婵☆垪鈧櫕鍋?====== */
+#include "bihuan_pid.h"             /* 濠⒀呭仱閸ｅ搫顕?PID 闁硅矇鍐ㄧ厬闁?*/
 
-/* ====== OLED 閺勫墽銇氬Ο鈥虫健 ====== */
-#include "oled.h"                   /* SSD1306 128x64 OLED 妞瑰崬濮?*/
+/* ====== OLED 闁哄嫬澧介妵姘熼垾铏仴 ====== */
+#include "oled.h"                   /* SSD1306 128x64 OLED 濡炵懓宕慨?*/
 
-/* ====== 閺嶅洤鍣?C 鎼?====== */
-#include <stdio.h>                  /* printf/sprintf 缁涘鐖ｉ崙?I/O */
-#include <stdlib.h>                 /* malloc/free/atoi 缁涘鐖ｉ崙鍡楃氨閸戣姤鏆?*/
+/* ====== 闁哄秴娲ら崳?C 閹?====== */
+#include <stdio.h>                  /* printf/sprintf 缂佹稑顦伴悥锝夊礄?I/O */
+#include <stdlib.h>                 /* malloc/free/atoi 缂佹稑顦伴悥锝夊礄閸℃姘ㄩ柛鎴ｅГ閺?*/
 
-/* ====== 閸忋劌鐪崣姗€鍣烘竟鐗堟閿涘潒xtern閿涘鈧柡鈧?鐎圭偤妾€规矮绠熼崷銊ヮ嚠鎼?.c 閺傚洣娆㈡稉?====== */
+/* ====== 闁稿繈鍔岄惇顒勫矗濮椻偓閸ｇ儤绔熼悧鍫燁潠闁挎稑娼抶tern闁挎稑顦埀顒佹煛閳?閻庡湱鍋ゅ顖溾偓瑙勭煯缁犵喖宕烽妸銉殸閹?.c 闁哄倸娲ｅ▎銏＄▔?====== */
 
-/* 閻㈠灚婧€闁矮淇婇崡蹇氼唴鐢呯处閸愭彃灏敍鍫濈暰娑斿婀?main.c閿?*/
-extern uint8_t DCC_v1_2[50];        /* 閻㈠灚婧€1 閸楀繗顔呯敮褝绱濋柅姘崇箖 UART2(PA21/PA22) 閸欐垿鈧?*/
+/* 闁汇垹鐏氬┃鈧梺顐ｇ煯娣囧﹪宕¤箛姘煎敶閻㈩垎鍛闁告劖褰冪亸顖炴晬閸繄鏆板☉鏂款槸濠€?main.c闁?*/
+extern uint8_t DCC_v1_2[50];        /* 闁汇垹鐏氬┃鈧? 闁告绻楅鍛暜瑜濈槐婵嬫焻濮樺磭绠?UART2(PA21/PA22) 闁告瑦鍨块埀?*/
 
-/* 閻㈠灚婧€閹貉冨煑閺嶅洤绻旈敍?=閹稿缍囬幐浣虹敾鏉烆剨绱?=閺夋儳绱戦崑婊勵剾閿?*/
-extern volatile uint8_t btn1_active;   /* 按键1 PB9  */
-extern volatile uint8_t btn2_active;   /* 按键2 PB8  */
-extern volatile uint8_t btn3_active;   /* 按键3 PA16 */
-extern volatile uint8_t btn4_active;   /* 按键4 PA15 */
+/* 闁汇垹鐏氬┃鈧柟璨夊啫鐓戦柡宥呮搐缁绘棃鏁?=闁圭顦紞鍥箰娴ｈ櫣鏁鹃弶鐑嗗墾缁?=闁哄鍎崇槐鎴﹀磻濠婂嫷鍓鹃柨?*/
+extern volatile uint8_t btn1_active;   /* 鎸夐敭1 PB9  */
+extern volatile uint8_t btn2_active;   /* 鎸夐敭2 PB8  */
+extern volatile uint8_t btn3_active;   /* 鎸夐敭3 PA16 */
+extern volatile uint8_t btn4_active;   /* 鎸夐敭4 PA15 */
 extern volatile uint8_t bujin_x;
 extern volatile uint8_t dir_x;
 extern volatile uint16_t pulse_x;
-extern volatile int32_t motor_angle;   /* 绱Н鏃嬭浆瑙掑害锛堝害锛?*/
-extern volatile int32_t motor_pulse;   /* 绱Н鑴夊啿鏁?*/
+extern volatile int32_t motor_angle;   /* 缁鳖垳袧閺冨娴嗙憴鎺戝閿涘牆瀹抽敍?*/
+extern volatile int32_t motor_pulse;   /* 缁鳖垳袧閼村鍟块弫?*/
+extern volatile int16_t motor_target;  /* 目标角度（钳位前） */
 #endif
