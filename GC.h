@@ -3,43 +3,45 @@
 
 /**
  * @file    GC.h
- * @brief   全局头文件汇总
+ * @brief   鍏ㄥ眬澶存枃浠舵眹鎬?
  *
- * 统一包含所有项目依赖与全局变量声明，其他源文件只需 #include "GC.h"
+ * 缁熶竴鍖呭惈鎵€鏈夐」鐩緷璧栦笌鍏ㄥ眬鍙橀噺澹版槑锛屽叾浠栨簮鏂囦欢鍙渶 #include "GC.h"
  */
 
-/* ====== 硬件驱动配置（SysConfig 自动生成） ====== */
-#include "ti_msp_dl_config.h"       /* MSPM0 外设配置：GPIO/UART/PWM/时钟 */
+/* ====== 纭欢椹卞姩閰嶇疆锛圫ysConfig 鑷姩鐢熸垚锛?====== */
+#include "ti_msp_dl_config.h"       /* MSPM0 澶栬閰嶇疆锛欸PIO/UART/PWM/鏃堕挓 */
 
-/* ====== 基础工具模块 ====== */
-#include "delay.h"                  /* 毫秒级延时函数 delay_ms() */
-#include "uart.h"                   /* 串口收发：UART_send_char/string/buffer */
+/* ====== 鍩虹宸ュ叿妯″潡 ====== */
+#include "delay.h"                  /* 姣绾у欢鏃跺嚱鏁?delay_ms() */
+#include "uart.h"                   /* 涓插彛鏀跺彂锛歎ART_send_char/string/buffer */
 
-/* ====== 按键模块 ====== */
-#include "key.h"                    /* 按键1(PB9)：get_key_state / key_read / key6_init */
+/* ====== 鎸夐敭妯″潡 ====== */
+#include "key.h"                    /* 鎸夐敭1(PB9)锛歡et_key_state / key_read / key6_init */
 
-/* ====== 步进电机控制模块 ====== */
-#include "bujin.h"                  /* 电机1(UART2/PA21/PA22)：dianji_roll() */
+/* ====== 姝ヨ繘鐢垫満鎺у埗妯″潡 ====== */
+#include "bujin.h"                  /* 鐢垫満1(UART2/PA21/PA22)锛歞ianji_roll() */
 
-/* ====== PID 控制模块 ====== */
-#include "bihuan_pid.h"             /* 增量式 PID 控制器 */
+/* ====== PID 鎺у埗妯″潡 ====== */
+#include "bihuan_pid.h"             /* 澧為噺寮?PID 鎺у埗鍣?*/
 
-/* ====== OLED 显示模块 ====== */
-#include "oled.h"                   /* SSD1306 128x64 OLED 驱动 */
+/* ====== OLED 鏄剧ず妯″潡 ====== */
+#include "oled.h"                   /* SSD1306 128x64 OLED 椹卞姩 */
 
-/* ====== 标准 C 库 ====== */
-#include <stdio.h>                  /* printf/sprintf 等标准 I/O */
-#include <stdlib.h>                 /* malloc/free/atoi 等标准库函数 */
+/* ====== 鏍囧噯 C 搴?====== */
+#include <stdio.h>                  /* printf/sprintf 绛夋爣鍑?I/O */
+#include <stdlib.h>                 /* malloc/free/atoi 绛夋爣鍑嗗簱鍑芥暟 */
 
-/* ====== 全局变量声明（extern）—— 实际定义在对应 .c 文件中 ====== */
+/* ====== 鍏ㄥ眬鍙橀噺澹版槑锛坋xtern锛夆€斺€?瀹為檯瀹氫箟鍦ㄥ搴?.c 鏂囦欢涓?====== */
 
-/* 电机通信协议帧缓冲区（定义在 main.c） */
-extern uint8_t DCC_v1_2[50];        /* 电机1 协议帧，通过 UART2(PA21/PA22) 发送 */
+/* 鐢垫満閫氫俊鍗忚甯х紦鍐插尯锛堝畾涔夊湪 main.c锛?*/
+extern uint8_t DCC_v1_2[50];        /* 鐢垫満1 鍗忚甯э紝閫氳繃 UART2(PA21/PA22) 鍙戦€?*/
 
-/* 电机控制标志（1=按住持续转，0=松开停止） */
-extern volatile uint8_t motor1_forward_active;   /* 电机1正向 PB9  (定义在 bujin.c)  */
-extern volatile uint8_t motor1_reverse_active;   /* 电机1反向 PB8  (定义在 bujin.c)  */
+/* 鐢垫満鎺у埗鏍囧織锛?=鎸変綇鎸佺画杞紝0=鏉惧紑鍋滄锛?*/
+extern volatile uint8_t motor1_forward_active;   /* 鐢垫満1姝ｅ悜 PB9  (瀹氫箟鍦?bujin.c)  */
+extern volatile uint8_t motor1_reverse_active;   /* 鐢垫満1鍙嶅悜 PB8  (瀹氫箟鍦?bujin.c)  */
 extern volatile uint8_t bujin_x;
 extern volatile uint8_t dir_x;
 extern volatile uint16_t pulse_x;
+extern volatile int32_t motor_angle;   /* 累积旋转角度（度） */
+extern volatile int32_t motor_pulse;   /* 累积脉冲数 */
 #endif

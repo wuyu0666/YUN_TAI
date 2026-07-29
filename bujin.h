@@ -1,4 +1,4 @@
-﻿#ifndef __BUJIN_H
+#ifndef __BUJIN_H
 #define __BUJIN_H
 
 /**
@@ -18,5 +18,14 @@ void dianji_roll(int16_t roll);
 void dianji1_pulse(int32_t pulse);
 
 void dianji_roll_pulse(uint16_t pulse, uint8_t dir);
+
+/* 设置当前位置为原点（较零），CMD 0x12 */
+void dianji_set_origin(void);
+
+/* 绝对旋转到指定角度（相对于原点），CMD 0x13 */
+void dianji_rotate_to(int16_t angle);
+
+/* 返回当前累计角度（度）*/
+int32_t dianji_get_angle(void);
 
 #endif
