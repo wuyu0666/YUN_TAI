@@ -1,4 +1,4 @@
-#ifndef __BUJIN2_H
+﻿#ifndef __BUJIN2_H
 #define __BUJIN2_H
 
 /**
@@ -9,12 +9,14 @@
  */
 
 /* 角度换算系数：编码器分辨率(16384) / 360度 = 每度对应的编码器计数 */
-#define jiaodu2 (16384/360)
+#define jiaodu2 45.5111f  /* 16384/360 精确值 */
 
 /* 电机2滚动函数：正值为正向旋转，负值为反向旋转，参数单位为度 */
 void dianji2_roll(int16_t roll);
 
 /* 电机2脉冲发送函数：正值为正向，负值为反向，参数单位为编码器脉冲 */
 void dianji2_pulse(int32_t pulse);
+
+void dianji2_roll_pulse(uint16_t pulse, uint8_t dir);
 
 #endif
