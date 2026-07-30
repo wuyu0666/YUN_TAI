@@ -73,44 +73,6 @@ int main(void){
     /* ---- 电机连接检测通过，设置当前位置为原点 ---- */
     dianji_set_origin();
     delay_ms(200);
-
-    /* ====== 电机自检：依次旋转到 +5°、-5°、+10°、-8°、0°，验证正反转及角度控制 ====== */
-    motor_target = 5;
-    OLED_ShowString(0, 0, (u8 *)"Tst:+005    ", 12);
-    dianji_rotate_to(motor_target);
-    sprintf(disp_buf, "Tgt:%+05d", motor_target);  OLED_ShowString(0, 16, (u8 *)disp_buf, 12);
-    sprintf(disp_buf, "Act:%+05d", (int)motor_angle); OLED_ShowString(0, 32, (u8 *)disp_buf, 12);
-    OLED_Refresh();  delay_ms(1200);
-
-    motor_target = -5;
-    OLED_ShowString(0, 0, (u8 *)"Tst:-005    ", 12);
-    dianji_rotate_to(motor_target);
-    sprintf(disp_buf, "Tgt:%+05d", motor_target);  OLED_ShowString(0, 16, (u8 *)disp_buf, 12);
-    sprintf(disp_buf, "Act:%+05d", (int)motor_angle); OLED_ShowString(0, 32, (u8 *)disp_buf, 12);
-    OLED_Refresh();  delay_ms(1200);
-
-    /* 正向大角度测试：+5° → +10° */
-    motor_target = 10;
-    OLED_ShowString(0, 0, (u8 *)"Tst:+010>+5", 12);
-    dianji_rotate_to(motor_target);
-    sprintf(disp_buf, "Tgt:%+05d", motor_target);  OLED_ShowString(0, 16, (u8 *)disp_buf, 12);
-    sprintf(disp_buf, "Act:%+05d", (int)motor_angle); OLED_ShowString(0, 32, (u8 *)disp_buf, 12);
-    OLED_Refresh();  delay_ms(1500);
-
-    /* 反向大角度测试：-5° → -8° */
-    motor_target = -8;
-    OLED_ShowString(0, 0, (u8 *)"Tst:-008>-5", 12);
-    dianji_rotate_to(motor_target);
-    sprintf(disp_buf, "Tgt:%+05d", motor_target);  OLED_ShowString(0, 16, (u8 *)disp_buf, 12);
-    sprintf(disp_buf, "Act:%+05d", (int)motor_angle); OLED_ShowString(0, 32, (u8 *)disp_buf, 12);
-    OLED_Refresh();  delay_ms(1500);
-
-    motor_target = 0;
-    OLED_ShowString(0, 0, (u8 *)"Tst:Finish  ", 12);
-    dianji_rotate_to(motor_target);
-    sprintf(disp_buf, "Tgt:%+05d", motor_target);  OLED_ShowString(0, 16, (u8 *)disp_buf, 12);
-    sprintf(disp_buf, "Act:%+05d", (int)motor_angle); OLED_ShowString(0, 32, (u8 *)disp_buf, 12);
-    OLED_Refresh();  delay_ms(800);
 #endif
 
     while (1) {
