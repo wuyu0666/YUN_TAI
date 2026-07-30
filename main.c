@@ -30,6 +30,9 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/* ====== 调试开关：电机未接时设为 0，接好电机后改回 1 ====== */
+#define MOTOR_CONNECTED 0
+
 #include "GC.h"
 
 uint8_t DCC_v1_2[50]={0};
@@ -37,9 +40,9 @@ uint8_t DCC_v1_2[50]={0};
 volatile uint8_t  bujin_x;
 volatile uint8_t  dir_x;
 volatile uint16_t pulse_x;
-volatile int32_t  motor_angle = 0;    /* 电机返回的实际角度 */
-volatile int32_t  motor_pulse = 0;    /* 累积脉冲数 */
-volatile int16_t  motor_target = 0;   /* 目标角度（钳位前） */
+volatile int32_t  motor_angle = 0;
+volatile int32_t  motor_pulse = 0;
+volatile int16_t  motor_target = 0;
 
 static PID_Inc_t pid_x;
 static char disp_buf[32];
@@ -49,10 +52,24 @@ int main(void){
     OLED_Init();
     OLED_ColorTurn(0); OLED_DisplayTurn(0);
     OLED_Clear();
+
+    /* 立即刷新一次，确认 OLED 已就绪 */
+    OLED_ShowString(0, 0,  (u8 *)"OLED Init OK", 12);
+#if MOTOR_CONNECTED
+    OLED_ShowString(0, 16, (u8 *)"Motor: ON", 12);
+#else
+    OLED_ShowString(0, 16, (u8 *)"Motor: OFF", 12);
+#endif
+    OLED_ShowString(0, 48, (u8 *)"Starting...", 12);
+    OLED_Refresh();
+    delay_ms(1000);
+
     key6_init();
     NVIC_EnableIRQ(K230_INST_INT_IRQN);
 
     PID_Inc_Init(&pid_x, 0.5f, 0.0f, 0.0f, 3.0f, 3000.0f, -3000.0f);
+
+#if MOTOR_CONNECTED
     /* ---- 步进电机开机较零 ---- */
     dianji_set_origin();
     delay_ms(200);
@@ -72,7 +89,7 @@ int main(void){
     sprintf(disp_buf, "Act:%+05d", (int)motor_angle); OLED_ShowString(0, 32, (u8 *)disp_buf, 12);
     OLED_Refresh();  delay_ms(1200);
 
-    /* 超限：+10° -> 钳到+5° */
+    /* 超限：+10 -> 钳到+5 */
     motor_target = 10;
     OLED_ShowString(0, 0, (u8 *)"Tst:+010>+5", 12);
     dianji_rotate_to(motor_target);
@@ -80,7 +97,7 @@ int main(void){
     sprintf(disp_buf, "Act:%+05d", (int)motor_angle); OLED_ShowString(0, 32, (u8 *)disp_buf, 12);
     OLED_Refresh();  delay_ms(1500);
 
-    /* 超限：-8° -> 钳到-5° */
+    /* 超限：-8 -> 钳到-5 */
     motor_target = -8;
     OLED_ShowString(0, 0, (u8 *)"Tst:-008>-5", 12);
     dianji_rotate_to(motor_target);
@@ -94,22 +111,31 @@ int main(void){
     sprintf(disp_buf, "Tgt:%+05d", motor_target);  OLED_ShowString(0, 16, (u8 *)disp_buf, 12);
     sprintf(disp_buf, "Act:%+05d", (int)motor_angle); OLED_ShowString(0, 32, (u8 *)disp_buf, 12);
     OLED_Refresh();  delay_ms(800);
-
+#endif
 
     while (1) {
+#if MOTOR_CONNECTED
         /* ---- 协议帧固定字段 ---- */
         DCC_v1_2[0]=0xAA; DCC_v1_2[1]=0x55; DCC_v1_2[2]=0x01;
         DCC_v1_2[3]=0x11; DCC_v1_2[4]=0x05; DCC_v1_2[5]=0x01;
         DCC_v1_2[6]=0x00; DCC_v1_2[7]=0x00;
-
+#endif
 
         /* ========== OLED 显示 ========== */
-        /* 第1行：目标角度 */
+        /* 第1行：目标角度或状态 */
+#if MOTOR_CONNECTED
         sprintf(disp_buf, "Tgt:%+05d", motor_target);
+#else
+        sprintf(disp_buf, "Motor: OFF");
+#endif
         OLED_ShowString(0, 0, (u8 *)disp_buf, 12);
 
         /* 第2行：实际角度 */
+#if MOTOR_CONNECTED
         sprintf(disp_buf, "Act:%+05d", (int)motor_angle);
+#else
+        sprintf(disp_buf, "No Motor Conn");
+#endif
         OLED_ShowString(0, 16, (u8 *)disp_buf, 12);
 
         /* 第3行：按键状态 */
@@ -128,6 +154,7 @@ int main(void){
         }
         OLED_Refresh();
 
+#if MOTOR_CONNECTED
         /* ---- 按键1：较零（上升沿触发） ---- */
         {
             static uint8_t btn1_prev = 0;
@@ -147,5 +174,6 @@ int main(void){
             motor_pulse += (int32_t)out_x;
             bujin_x = 0;
         }
+#endif
     }
 }

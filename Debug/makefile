@@ -135,7 +135,7 @@ all: $(OBJS) $(GEN_CMDS)
 # Tool invocations
 DCC_101_v1.out: $(OBJS) $(GEN_CMDS)
 	@echo 'Arm Linker - building target: "$@"'
-	"C:/ti/ccs2050/ccs/tools/compiler/ti-cgt-armllvm_4.0.4.LTS/bin/tiarmclang.exe" @"device.opt"  -march=thumbv6m -mcpu=cortex-m0plus -mfloat-abi=soft -mlittle-endian -mthumb -O0 -gdwarf-3 -Wall -Wl,-m"DCC_101_v1.map" -Wl,-i"C:/ti/mspm0_sdk_2_10_00_04/source" -Wl,-i"C:/Users/33193/Desktop/12334/YUN_TAI" -Wl,-i"C:/Users/33193/Desktop/12334/YUN_TAI/Debug/syscfg" -Wl,-i"C:/ti/ccs2050/ccs/tools/compiler/ti-cgt-armllvm_4.0.4.LTS/lib" -Wl,--diag_wrap=off -Wl,--display_error_number -Wl,--warn_sections -Wl,--xml_link_info="DCC_101_v1_linkInfo.xml" -Wl,--rom_model -o "DCC_101_v1.out" $(ORDERED_OBJS)
+	"C:/ti/ccs2050/ccs/tools/compiler/ti-cgt-armllvm_4.0.4.LTS/bin/tiarmclang.exe" @"device.opt"  -march=thumbv6m -mcpu=cortex-m0plus -mfloat-abi=soft -mlittle-endian -mthumb -O0 -gdwarf-3 -Wall -Wl,-m"DCC_101_v1.map" -Wl,-i"C:/ti/mspm0_sdk_2_10_00_04/source" -Wl,-i"C:/Users/14395/workspace_ccstheia/yuntai_3.5" -Wl,-i"C:/Users/14395/workspace_ccstheia/yuntai_3.5/Debug/syscfg" -Wl,-i"C:/ti/ccs2050/ccs/tools/compiler/ti-cgt-armllvm_4.0.4.LTS/lib" -Wl,--diag_wrap=off -Wl,--display_error_number -Wl,--warn_sections -Wl,--xml_link_info="DCC_101_v1_linkInfo.xml" -Wl,--rom_model -o "DCC_101_v1.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
