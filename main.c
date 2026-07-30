@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2021, Texas Instruments Incorporated
  * All rights reserved.
  *
@@ -30,7 +30,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* ====== 电机连接状态：0=未连接，1=已连接 ====== */
+/* ====== 鐢垫満杩炴帴鐘舵€侊細0=鏈繛鎺ワ紝1=宸茶繛鎺?====== */
 #define MOTOR_CONNECTED 1
 
 #include "GC.h"
@@ -45,6 +45,7 @@ volatile int32_t  motor_pulse = 0;
 volatile int16_t  motor_target = 0;
 
 static PID_Inc_t pid_x;
+static float pid_prev_out = 0;
 static char disp_buf[32];
 
 int main(void){
@@ -53,7 +54,7 @@ int main(void){
     OLED_ColorTurn(0); OLED_DisplayTurn(0);
     OLED_Clear();
 
-    /* 初始化外设完成，OLED 显示启动信息 */
+    /* 鍒濆鍖栧璁惧畬鎴愶紝OLED 鏄剧ず鍚姩淇℃伅 */
     OLED_ShowString(0, 0,  (u8 *)"OLED Init OK", 12);
 #if MOTOR_CONNECTED
     OLED_ShowString(0, 16, (u8 *)"Motor: ON", 12);
@@ -67,24 +68,24 @@ int main(void){
     key6_init();
     NVIC_EnableIRQ(K230_INST_INT_IRQN);
 
-    PID_Inc_Init(&pid_x, 2.0f, 0.1f, 0.5f, 3.0f, 3000.0f, -3000.0f);
+    PID_Inc_Init(&pid_x, 0.8f, 0.05f, 0.15f, 3.0f, 3000.0f, -3000.0f);
 
 #if MOTOR_CONNECTED
-    /* ---- 电机连接检测通过，设置当前位置为原点 ---- */
+    /* ---- 鐢垫満杩炴帴妫€娴嬮€氳繃锛岃缃綋鍓嶄綅缃负鍘熺偣 ---- */
     dianji_set_origin();
     delay_ms(200);
 #endif
 
     while (1) {
 #if MOTOR_CONNECTED
-        /* ---- 主循环：填充电机控制协议帧（默认正向）---- */
+        /* ---- 涓诲惊鐜細濉厖鐢垫満鎺у埗鍗忚甯э紙榛樿姝ｅ悜锛?--- */
         DCC_v1_2[0]=0xAA; DCC_v1_2[1]=0x55; DCC_v1_2[2]=0x01;
         DCC_v1_2[3]=0x11; DCC_v1_2[4]=0x05; DCC_v1_2[5]=0x01;
         DCC_v1_2[6]=0x00; DCC_v1_2[7]=0x00;
 #endif
 
-        /* ========== OLED 显示刷新 ========== */
-        /* 第1行：显示目标角度 */
+        /* ========== OLED 鏄剧ず鍒锋柊 ========== */
+        /* 绗?琛岋細鏄剧ず鐩爣瑙掑害 */
 #if MOTOR_CONNECTED
         sprintf(disp_buf, "Tgt:%+05d", motor_target);
 #else
@@ -92,7 +93,7 @@ int main(void){
 #endif
         OLED_ShowString(0, 0, (u8 *)disp_buf, 12);
 
-        /* 第2行：显示实际角度 */
+        /* 绗?琛岋細鏄剧ず瀹為檯瑙掑害 */
 #if MOTOR_CONNECTED
         sprintf(disp_buf, "Act:%+05d", (int)motor_angle);
 #else
@@ -100,14 +101,14 @@ int main(void){
 #endif
         OLED_ShowString(0, 16, (u8 *)disp_buf, 12);
 
-        /* 第3行：显示按键状态 */
+        /* 绗?琛岋細鏄剧ず鎸夐敭鐘舵€?*/
         if (btn1_active)                OLED_ShowString(0, 32, (u8 *)"Btn1:SET0 ", 12);
         else if (btn2_active)           OLED_ShowString(0, 32, (u8 *)"Btn2:---- ", 12);
         else if (btn3_active)           OLED_ShowString(0, 32, (u8 *)"Btn3:---- ", 12);
         else if (btn4_active)           OLED_ShowString(0, 32, (u8 *)"Btn4:---- ", 12);
         else                            OLED_ShowString(0, 32, (u8 *)"Btn :---- ", 12);
 
-        /* 第4行：显示 K230 视觉反馈数据 */
+        /* 绗?琛岋細鏄剧ず K230 瑙嗚鍙嶉鏁版嵁 */
         if (bujin_x == 1) {
             sprintf(disp_buf, "FB:%c%-5u", (dir_x==0x01)?'+':'-', pulse_x);
             OLED_ShowString(0, 48, (u8 *)disp_buf, 12);
@@ -117,24 +118,28 @@ int main(void){
         OLED_Refresh();
 
 #if MOTOR_CONNECTED
-        /* ---- 按键1(PB9)上升沿：电机归零原点 ---- */
+        /* ---- 鎸夐敭1(PB9)涓婂崌娌匡細鐢垫満褰掗浂鍘熺偣 ---- */
         {
             static uint8_t btn1_prev = 0;
             if (btn1_active && !btn1_prev) {
                 motor_target = 0;
                 dianji_set_origin();
+                pid_prev_out = 0;
             }
             btn1_prev = btn1_active;
         }
 
-        /* ---- K230 视觉误差反馈 → PID 闭环控制 ---- */
+        /* ---- K230 瑙嗚璇樊鍙嶉 鈫?PID 闂幆鎺у埗 ---- */
         if (bujin_x == 1)
         {
             float feedback_x = (dir_x == 0x01) ? (float)pulse_x : -(float)pulse_x;
-            float out_x = PID_Inc_Calc(&pid_x, feedback_x, 0.0f);
-            int16_t angle = (int16_t)(out_x / jiaodu);
-            dianji_rotate_to(angle);
-            motor_pulse += (int32_t)out_x;
+            float out_x = PID_Inc_Calc(&pid_x, 0.0f, feedback_x);
+            int32_t delta = (int32_t)(out_x - pid_prev_out);
+            pid_prev_out = out_x;
+            if (delta != 0) {
+                dianji1_pulse(delta);
+            }
+            motor_pulse += delta;
             bujin_x = 0;
         }
 #endif
