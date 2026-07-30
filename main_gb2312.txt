@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2021, Texas Instruments Incorporated
  * All rights reserved.
  *
@@ -30,7 +30,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* ====== 电机连接状态：0=未连接，1=已连接 ====== */
+/* ====== 闂佽崵濮撮鍛村疮閹惰姤鍎婃い鏍ㄥ嚬閸ゆ洟鏌嶈閸撶喎鐣峰Δ鍐┏闁革富鍘鹃悰銉╂⒑濮瑰洤鐏╅柣蹇旇壘閳瑰啴鍩€椤掑嫭鐓涢柛顐亗缁ㄥジ鎮介娑欏唉鐎殿噮鍣ｉ獮鍡涙焽閿曗偓閺咁厽绻?0闂備焦瀵х粙鎴﹀嫉椤掑倹鏆滈悗娑欘焽闂勫嫰鏌ｉ敐鍛拱闁哄棌鏅犻弻锟犲醇濠靛洦鍎撻梺璇″枟椤ㄥ﹤顕ｉ妸鈺傚仭闁绘鐗忛ˇ?1 ====== */
 #define MOTOR_CONNECTED 1
 
 #include "GC.h"
@@ -53,7 +53,7 @@ int main(void){
     OLED_ColorTurn(0); OLED_DisplayTurn(0);
     OLED_Clear();
 
-    /* 初始化外设完成，OLED 显示启动信息 */
+    /* 缂傚倷鐒﹂弻銊╊敄閸涱厾鏆ら柛鈩冪☉缁€鍡涙⒑閸噮鍎愰柣鎾亾濠电偞鍨堕幐鎾磻閹惧绠鹃柛鈥崇箲椤绱掓潏銊х畼婵炴垹鏁婚、娆忊枎閹勫€?OLED 闁诲海鎳撻幉陇銇愰崘顭戞僵闁靛ě鍛紲?*/
     OLED_ShowString(0, 0,  (u8 *)"OLED Init OK", 12);
 #if MOTOR_CONNECTED
     OLED_ShowString(0, 16, (u8 *)"Motor: ON", 12);
@@ -70,11 +70,11 @@ int main(void){
     PID_Inc_Init(&pid_x, 2.0f, 0.1f, 0.5f, 3.0f, 3000.0f, -3000.0f);
 
 #if MOTOR_CONNECTED
-    /* ---- 电机连接检测通过，设置当前位置为原点 ---- */
+    /* ---- 婵犳鍠楃缓鍧楀磿鐎靛憡宕叉慨妞诲亾闁诡喕绮欏畷褰掝敃閿濆洨姣ｉ柣搴㈩問閸犳帡宕戦幘缁樼厸闁割偁鍎崇槐鎵磼閼哥數绠炴慨?---- */
     dianji_set_origin();
     delay_ms(200);
 
-    /* ====== 电机自检：依次旋转到 +5°、-5°、+10°、-8°、0°，验证正反转及角度控制 ====== */
+    /* ====== 婵犳鍠楃缓鍧楀磿鐎靛憡宕叉慨妞诲亾闁诡喕绮欏畷褰掝敃閿濆洨姣ｉ柣搴㈩問閸犳帡宕戦幘缁樼厸闁割偁鍎崇槐浼存煕閵堝棛鐭婇摶鐐烘煃瑜滈崜鐔煎极瀹ュ閱囨繝闈涙搐閸撶敻鏌ｉ埄鍐ㄧ瑨闁硅櫕锚椤﹤煤椤忓懐鍙冮梺绋跨箰閹虫劗绮旂€涙绠鹃柡澶嬪焾閸庢捇鏌ｉ敂璇茬仸闁?====== */
     motor_target = 5;
     OLED_ShowString(0, 0, (u8 *)"Tst:+005    ", 12);
     dianji_rotate_to(motor_target);
@@ -89,7 +89,7 @@ int main(void){
     sprintf(disp_buf, "Act:%+05d", (int)motor_angle); OLED_ShowString(0, 32, (u8 *)disp_buf, 12);
     OLED_Refresh();  delay_ms(1200);
 
-    /* 正向大角度测试：+5° → +10° */
+    /* 闂佺儵鍓濈敮鎺楀箠濡警鐎舵繛宸簼閺?10 -> 闂傚倷娴囧Λ鍕疮閸ф鏄?5 */
     motor_target = 10;
     OLED_ShowString(0, 0, (u8 *)"Tst:+010>+5", 12);
     dianji_rotate_to(motor_target);
@@ -97,7 +97,7 @@ int main(void){
     sprintf(disp_buf, "Act:%+05d", (int)motor_angle); OLED_ShowString(0, 32, (u8 *)disp_buf, 12);
     OLED_Refresh();  delay_ms(1500);
 
-    /* 反向大角度测试：-5° → -8° */
+    /* 闂佺儵鍓濈敮鎺楀箠濡警鐎舵繛宸簼閺?8 -> 闂傚倷娴囧Λ鍕疮閸ф鏄?5 */
     motor_target = -8;
     OLED_ShowString(0, 0, (u8 *)"Tst:-008>-5", 12);
     dianji_rotate_to(motor_target);
@@ -115,14 +115,14 @@ int main(void){
 
     while (1) {
 #if MOTOR_CONNECTED
-        /* ---- 主循环：填充电机控制协议帧（默认正向）---- */
+        /* ---- 闂備礁鎲￠〃鍛崲濡ゅ拋鏁婇柛娑卞灡閺嗘粎鎲稿鍚ゅ綊骞囬鐟颁壕閻熸瑥瀚竟姗€鏌ｉ埊娆忓暊閺?---- */
         DCC_v1_2[0]=0xAA; DCC_v1_2[1]=0x55; DCC_v1_2[2]=0x01;
         DCC_v1_2[3]=0x11; DCC_v1_2[4]=0x05; DCC_v1_2[5]=0x01;
         DCC_v1_2[6]=0x00; DCC_v1_2[7]=0x00;
 #endif
 
-        /* ========== OLED 显示刷新 ========== */
-        /* 第1行：显示目标角度 */
+        /* ========== OLED 闂備礁鎼€氼剚鏅舵禒瀣?========== */
+        /* 缂?闂佽崵鍋炵粙鎴︽儗婢跺本顫曞ù鐓庣摠閸庡孩銇勯弮鍌涙珪闁搞劌銈搁幃宄扳枎閹邦剛鐟ㄩ柣搴ゎ潐婵炲﹪鐛€ｎ喖鍐€妞ゆ劏鎳ｉ敃鍌涚厵?*/
 #if MOTOR_CONNECTED
         sprintf(disp_buf, "Tgt:%+05d", motor_target);
 #else
@@ -130,7 +130,7 @@ int main(void){
 #endif
         OLED_ShowString(0, 0, (u8 *)disp_buf, 12);
 
-        /* 第2行：显示实际角度 */
+        /* 缂?闂佽崵鍋炵粙鎴︽儗婢跺本顫曢柟娈垮枓閸嬫捇宕烽鐐版濠碉紕铏庨崹鎶藉箟閹绢喖绠抽柟瀛樼箥閸?*/
 #if MOTOR_CONNECTED
         sprintf(disp_buf, "Act:%+05d", (int)motor_angle);
 #else
@@ -138,14 +138,14 @@ int main(void){
 #endif
         OLED_ShowString(0, 16, (u8 *)disp_buf, 12);
 
-        /* 第3行：显示按键状态 */
+        /* 缂?闂佽崵鍋炵粙鎴︽儗婢跺本顫曞ù鍏兼綑缁犳澘顭块懜闈涘闁哄棙鐩弻锝呂熼崹顔惧帿闂?*/
         if (btn1_active)                OLED_ShowString(0, 32, (u8 *)"Btn1:SET0 ", 12);
         else if (btn2_active)           OLED_ShowString(0, 32, (u8 *)"Btn2:---- ", 12);
         else if (btn3_active)           OLED_ShowString(0, 32, (u8 *)"Btn3:---- ", 12);
         else if (btn4_active)           OLED_ShowString(0, 32, (u8 *)"Btn4:---- ", 12);
         else                            OLED_ShowString(0, 32, (u8 *)"Btn :---- ", 12);
 
-        /* 第4行：显示 K230 视觉反馈数据 */
+        /* 缂?闂佽崵鍋炵粙鎴︽儗婢跺本顫曢柣?30 闂備礁鎲￠悷銉х矓瑜版帇鈧?*/
         if (bujin_x == 1) {
             sprintf(disp_buf, "FB:%c%-5u", (dir_x==0x01)?'+':'-', pulse_x);
             OLED_ShowString(0, 48, (u8 *)disp_buf, 12);
@@ -155,7 +155,7 @@ int main(void){
         OLED_Refresh();
 
 #if MOTOR_CONNECTED
-        /* ---- 按键1(PB9)上升沿：电机归零原点 ---- */
+        /* ---- 闂備礁婀遍…鍫ニ囬悽绋挎瀬?闂備焦瀵х粙鎺撶┍閾忚顐芥繝闈涱儐閳锋牠鎮规担鍛婅础缂佲偓閸曨偀妲堥柟鍓ь劜瀹搞儳鈧娲栭懟顖炲煝娴犲鍤勬い鏍ф噺濞茬喎鐣烽敐澶婄妞ゆ牗绮庨ˇ?---- */
         {
             static uint8_t btn1_prev = 0;
             if (btn1_active && !btn1_prev) {
@@ -165,7 +165,7 @@ int main(void){
             btn1_prev = btn1_active;
         }
 
-        /* ---- K230 视觉误差反馈 → PID 闭环控制 ---- */
+        /* ---- K230 闂佽崵鍠愰悷銉ノ涘鍫稏閹兼番鍨归閬嶆煟閹寸倖鎴犵不?PID ---- */
         if (bujin_x == 1)
         {
             float feedback_x = (dir_x == 0x01) ? (float)pulse_x : -(float)pulse_x;
@@ -178,3 +178,4 @@ int main(void){
 #endif
     }
 }
+
