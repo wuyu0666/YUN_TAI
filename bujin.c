@@ -10,18 +10,7 @@ volatile uint8_t btn4_active = 0;
 volatile uint8_t pid_timer_tick = 0;
 
 /* ---- PID 闂幆瀹炰緥锛屼富寰幆璁块棶 ---- */
-/* ===== 双环 PID（TASK2 式：位置环 + 速度环） ===== */
-
-/* 输出方向反转开关：1=反向（硬件方向相反时打开，默认 0） */
-#define PID_OUTPUT_REVERSE 0U
-/* 位置环：误差输入限幅（像素） */
-#define PID_POS_INPUT_LIMIT_PX 60.0f
-/* 位置环 / 合成输出限幅（角度） */
-#define PID_POS_OUTPUT_LIMIT_DEG 100.0f
-/* 速度环输出限幅（角度） */
-#define PID_VEL_OUTPUT_LIMIT_DEG 90.0f
-/* 位置误差死区（像素）：死区内清零双环状态并停机 */
-#define PID_DEADBAND_PX 5.0f
+/* ===== 双环 PID（TASK2 式：位置环 + 速度环），参数统一在 bujin.h 调参区修改 ===== */
 
 /* 位置环 PID 实例（按键调参与 OLED 显示都读它） */
 static PID_Pos_t s_pos_pid;
@@ -40,8 +29,11 @@ static uint8_t pid_tick_cnt = 0;
 
 void pid_control_init(void)
 {
-    PID_Pos_Init(&s_pos_pid, 0.227f, 0.4f, 16.4f, PID_POS_OUTPUT_LIMIT_DEG);
-    PID_Pos_Init(&s_vel_pid, 1.8f, 0.1f, 1.0f, PID_VEL_OUTPUT_LIMIT_DEG);
+    /* 增益在 bujin.h 的 PID 调参区统一修改 */
+    PID_Pos_Init(&s_pos_pid, PID_POS_KP, PID_POS_KI, PID_POS_KD,
+                 PID_POS_OUTPUT_LIMIT_DEG);
+    PID_Pos_Init(&s_vel_pid, PID_VEL_KP, PID_VEL_KI, PID_VEL_KD,
+                 PID_VEL_OUTPUT_LIMIT_DEG);
     s_prev_error = 0.0f;
     s_has_prev_error = 0U;
     s_ball_velocity = 0.0f;

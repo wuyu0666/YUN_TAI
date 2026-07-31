@@ -1,7 +1,7 @@
 ******************************************************************************
             TI ARM Clang Linker PC v4.0.4                      
 ******************************************************************************
->> Linked Fri Jul 31 19:46:44 2026
+>> Linked Fri Jul 31 20:56:25 2026
 
 OUTPUT FILE NAME:   <DCC_101_v1.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 00003b2d
@@ -49,38 +49,38 @@ section   page    origin      length       input sections
                   00001254    000001ac     bujin.o (.text.TIMA0_IRQHandler)
                   00001400    00000192     libclang_rt.builtins.a : adddf3.S.obj (.text.adddf3_subdf3)
                   00001592    00000002                            : aeabi_div0.c.obj (.text.__aeabi_idiv0)
-                  00001594    00000160     bujin.o (.text.pid_compute)
-                  000016f4    00000158     oled.o (.text.OLED_ShowChar)
-                  0000184c    0000013c     libc.a : _printfi.c.obj (.text.fcvt)
-                  00001988    00000120            : _printfi.c.obj (.text._pconv_e)
-                  00001aa8    0000010c     libclang_rt.builtins.a : divdf3.S.obj (.text.__divdf3)
-                  00001bb4    00000104     driverlib.a : dl_timer.o (.text.DL_Timer_initFourCCPWMMode)
-                  00001cb8    00000104     bujin.o (.text.dianji1_pulse_fast)
-                  00001dbc    000000f8     oled.o (.text.OLED_Init)
-                  00001eb4    000000f4     ti_msp_dl_config.o (.text.SYSCFG_DL_GPIO_init)
-                  00001fa8    000000e8     ti_msp_dl_config.o (.text.SYSCFG_DL_SYSCTL_SYSPLL_init)
-                  00002090    000000e4     libclang_rt.builtins.a : muldf3.S.obj (.text.__muldf3)
-                  00002174    000000dc     driverlib.a : dl_sysctl_mspm0g1x0x_g3x0x.o (.text.DL_SYSCTL_configSYSPLL)
-                  00002250    000000d8     bihuan_pid.o (.text.PID_Pos_Calc)
-                  00002328    000000d8     libc.a : s_scalbn.c.obj (.text.scalbn)
-                  00002400    000000d8     libclang_rt.builtins.a : addsf3.S.obj (.text)
-                  000024d8    000000ac     uart.o (.text.UART3_IRQHandler)
-                  00002584    000000a8     key.o (.text.key6_init)
-                  0000262c    000000a2     libclang_rt.builtins.a : udivmoddi4.S.obj (.text)
-                  000026ce    00000002                            : aeabi_div0.c.obj (.text.__aeabi_ldiv0)
-                  000026d0    0000009c     bujin.o (.text.dianji_set_origin)
-                  0000276c    00000098     oled.o (.text.OLED_ShowString)
-                  00002804    0000008c     ti_msp_dl_config.o (.text.SYSCFG_DL_initPower)
-                  00002890    0000008c     libclang_rt.builtins.a : mulsf3.S.obj (.text.__mulsf3)
-                  0000291c    00000082                            : divsf3.S.obj (.text.__divsf3)
-                  0000299e    00000002     --HOLE-- [fill = 0]
-                  000029a0    0000007c     oled.o (.text.OLED_Refresh)
-                  00002a1c    0000007c     libc.a : copy_decompress_lzss.c.obj (.text:decompress:lzss)
-                  00002a98    00000078     bujin.o (.text.pid_control_init)
-                  00002b10    00000074     oled.o (.text.OLED_WR_Byte)
-                  00002b84    00000074     ti_msp_dl_config.o (.text.SYSCFG_DL_SYSCTL_init)
-                  00002bf8    00000074     libclang_rt.builtins.a : comparedf2.c.obj (.text.__gedf2)
-                  00002c6c    00000070     ti_msp_dl_config.o (.text.SYSCFG_DL_DCC_PWM_init)
+                  00001594    00000168     bujin.o (.text.pid_compute)
+                  000016fc    00000158     oled.o (.text.OLED_ShowChar)
+                  00001854    0000013c     libc.a : _printfi.c.obj (.text.fcvt)
+                  00001990    00000120            : _printfi.c.obj (.text._pconv_e)
+                  00001ab0    0000010c     libclang_rt.builtins.a : divdf3.S.obj (.text.__divdf3)
+                  00001bbc    00000104     driverlib.a : dl_timer.o (.text.DL_Timer_initFourCCPWMMode)
+                  00001cc0    00000104     bujin.o (.text.dianji1_pulse_fast)
+                  00001dc4    000000f8     oled.o (.text.OLED_Init)
+                  00001ebc    000000f4     ti_msp_dl_config.o (.text.SYSCFG_DL_GPIO_init)
+                  00001fb0    000000e8     ti_msp_dl_config.o (.text.SYSCFG_DL_SYSCTL_SYSPLL_init)
+                  00002098    000000e4     libclang_rt.builtins.a : muldf3.S.obj (.text.__muldf3)
+                  0000217c    000000dc     driverlib.a : dl_sysctl_mspm0g1x0x_g3x0x.o (.text.DL_SYSCTL_configSYSPLL)
+                  00002258    000000d8     bihuan_pid.o (.text.PID_Pos_Calc)
+                  00002330    000000d8     libc.a : s_scalbn.c.obj (.text.scalbn)
+                  00002408    000000d8     libclang_rt.builtins.a : addsf3.S.obj (.text)
+                  000024e0    000000ac     uart.o (.text.UART3_IRQHandler)
+                  0000258c    000000a8     key.o (.text.key6_init)
+                  00002634    000000a2     libclang_rt.builtins.a : udivmoddi4.S.obj (.text)
+                  000026d6    00000002                            : aeabi_div0.c.obj (.text.__aeabi_ldiv0)
+                  000026d8    0000009c     bujin.o (.text.dianji_set_origin)
+                  00002774    00000098     oled.o (.text.OLED_ShowString)
+                  0000280c    0000008c     ti_msp_dl_config.o (.text.SYSCFG_DL_initPower)
+                  00002898    0000008c     libclang_rt.builtins.a : mulsf3.S.obj (.text.__mulsf3)
+                  00002924    00000082                            : divsf3.S.obj (.text.__divsf3)
+                  000029a6    00000002     --HOLE-- [fill = 0]
+                  000029a8    0000007c     oled.o (.text.OLED_Refresh)
+                  00002a24    0000007c     libc.a : copy_decompress_lzss.c.obj (.text:decompress:lzss)
+                  00002aa0    00000074     oled.o (.text.OLED_WR_Byte)
+                  00002b14    00000074     ti_msp_dl_config.o (.text.SYSCFG_DL_SYSCTL_init)
+                  00002b88    00000074     libclang_rt.builtins.a : comparedf2.c.obj (.text.__gedf2)
+                  00002bfc    00000070     ti_msp_dl_config.o (.text.SYSCFG_DL_DCC_PWM_init)
+                  00002c6c    00000070     bujin.o (.text.pid_control_init)
                   00002cdc    00000068     libclang_rt.builtins.a : comparedf2.c.obj (.text.__ledf2)
                   00002d44    00000066     libc.a : _printfi.c.obj (.text._mcpy)
                   00002daa    00000002     --HOLE-- [fill = 0]
@@ -468,10 +468,10 @@ address   name
 00002ffd  DL_I2C_fillControllerTXFIFO          
 00003b7b  DL_I2C_setClockConfig                
 00003d6d  DL_SYSCTL_configFCC                  
-00002175  DL_SYSCTL_configSYSPLL               
+0000217d  DL_SYSCTL_configSYSPLL               
 00002dad  DL_SYSCTL_setHFCLKSourceHFXTParams   
 00003555  DL_SYSCTL_switchMCLKfromSYSOSCtoHSCLK
-00001bb5  DL_Timer_initFourCCPWMMode           
+00001bbd  DL_Timer_initFourCCPWMMode           
 00003df9  DL_Timer_setCaptCompUpdateMethod     
 00003fd5  DL_Timer_setCaptureCompareOutCtl     
 000041f9  DL_Timer_setCaptureCompareValue      
@@ -494,12 +494,12 @@ address   name
 00003435  OLED_DisplayTurn                     
 0000347d  OLED_DrawPoint                       
 20200000  OLED_GRAM                            
-00001dbd  OLED_Init                            
-000029a1  OLED_Refresh                         
-000016f5  OLED_ShowChar                        
-0000276d  OLED_ShowString                      
-00002b11  OLED_WR_Byte                         
-00002251  PID_Pos_Calc                         
+00001dc5  OLED_Init                            
+000029a9  OLED_Refresh                         
+000016fd  OLED_ShowChar                        
+00002775  OLED_ShowString                      
+00002aa1  OLED_WR_Byte                         
+00002259  PID_Pos_Calc                         
 0000383b  PID_Pos_Init                         
 000042cf  PendSV_Handler                       
 000042cf  RTC_IRQHandler                       
@@ -508,15 +508,15 @@ address   name
 000042cf  SPI1_IRQHandler                      
 000042cf  SVC_Handler                          
 00003599  SYSCFG_DL_DCC101_v1_2_init           
-00002c6d  SYSCFG_DL_DCC_PWM_init               
-00001eb5  SYSCFG_DL_GPIO_init                  
+00002bfd  SYSCFG_DL_DCC_PWM_init               
+00001ebd  SYSCFG_DL_GPIO_init                  
 000034c5  SYSCFG_DL_K230_init                  
 00002f9d  SYSCFG_DL_OLED_init                  
 0000350d  SYSCFG_DL_PRINT_init                 
-00001fa9  SYSCFG_DL_SYSCTL_SYSPLL_init         
-00002b85  SYSCFG_DL_SYSCTL_init                
+00001fb1  SYSCFG_DL_SYSCTL_SYSPLL_init         
+00002b15  SYSCFG_DL_SYSCTL_init                
 000036d5  SYSCFG_DL_init                       
-00002805  SYSCFG_DL_initPower                  
+0000280d  SYSCFG_DL_initPower                  
 000042cf  SysTick_Handler                      
 00001255  TIMA0_IRQHandler                     
 000042cf  TIMA1_IRQHandler                     
@@ -530,7 +530,7 @@ address   name
 000042cf  UART0_IRQHandler                     
 000042cf  UART1_IRQHandler                     
 000042cf  UART2_IRQHandler                     
-000024d9  UART3_IRQHandler                     
+000024e1  UART3_IRQHandler                     
 00003919  UART_send_buffer                     
 00003e4d  UART_send_char                       
 20208000  __STACK_END                          
@@ -550,7 +550,7 @@ address   name
 00005cb0  __TI_Handler_Table_Base              
 00005cbc  __TI_Handler_Table_Limit             
 00003789  __TI_auto_init_nobinit_nopinit       
-00002a1d  __TI_decompress_lzss                 
+00002a25  __TI_decompress_lzss                 
 000041b5  __TI_decompress_none                 
 000030b9  __TI_ltoa                            
 ffffffff  __TI_pprof_out_hndl                  
@@ -560,7 +560,7 @@ ffffffff  __TI_prof_data_start
 00000000  __TI_static_base__                   
 00004219  __TI_zero_init                       
 0000140b  __adddf3                             
-0000240b  __addsf3                             
+00002413  __addsf3                             
 00005aa0  __aeabi_ctype_table_                 
 00005aa0  __aeabi_ctype_table_C                
 000033a1  __aeabi_d2iz                         
@@ -570,28 +570,28 @@ ffffffff  __TI_prof_data_start
 00002ec5  __aeabi_dcmpgt                       
 00002e9d  __aeabi_dcmple                       
 00002e89  __aeabi_dcmplt                       
-00001aa9  __aeabi_ddiv                         
-00002091  __aeabi_dmul                         
+00001ab1  __aeabi_ddiv                         
+00002099  __aeabi_dmul                         
 00001401  __aeabi_dsub                         
 2020060c  __aeabi_errno                        
 000042b1  __aeabi_errno_addr                   
 00003619  __aeabi_f2d                          
 00003875  __aeabi_f2iz                         
-0000240b  __aeabi_fadd                         
+00002413  __aeabi_fadd                         
 00002ed9  __aeabi_fcmpeq                       
 00002f15  __aeabi_fcmpge                       
 00002f29  __aeabi_fcmpgt                       
 00002f01  __aeabi_fcmple                       
 00002eed  __aeabi_fcmplt                       
-0000291d  __aeabi_fdiv                         
-00002891  __aeabi_fmul                         
-00002401  __aeabi_fsub                         
+00002925  __aeabi_fdiv                         
+00002899  __aeabi_fmul                         
+00002409  __aeabi_fsub                         
 00003a39  __aeabi_i2d                          
 00003711  __aeabi_i2f                          
 00003169  __aeabi_idiv                         
 00001593  __aeabi_idiv0                        
 00003169  __aeabi_idivmod                      
-000026cf  __aeabi_ldiv0                        
+000026d7  __aeabi_ldiv0                        
 00003d15  __aeabi_llsl                         
 00003be9  __aeabi_lmul                         
 0000426d  __aeabi_memclr                       
@@ -612,8 +612,8 @@ ffffffff  __TI_prof_data_start
 ffffffff  __binit__                            
 00002cdd  __cmpdf2                             
 000037c5  __cmpsf2                             
-00001aa9  __divdf3                             
-0000291d  __divsf3                             
+00001ab1  __divdf3                             
+00002925  __divsf3                             
 00002cdd  __eqdf2                              
 000037c5  __eqsf2                              
 00003619  __extendsfdf2                        
@@ -623,19 +623,19 @@ ffffffff  __binit__
 00003711  __floatsisf                          
 00003bc5  __floatunsidf                        
 00003b05  __floatunsisf                        
-00002bf9  __gedf2                              
+00002b89  __gedf2                              
 0000374d  __gesf2                              
-00002bf9  __gtdf2                              
+00002b89  __gtdf2                              
 0000374d  __gtsf2                              
 00002cdd  __ledf2                              
 000037c5  __lesf2                              
 00002cdd  __ltdf2                              
 000037c5  __ltsf2                              
 UNDEFED   __mpu_init                           
-00002091  __muldf3                             
+00002099  __muldf3                             
 00003be9  __muldi3                             
 00003801  __muldsi3                            
-00002891  __mulsf3                             
+00002899  __mulsf3                             
 00002cdd  __nedf2                              
 000037c5  __nesf2                              
 20207e00  __stack                              
@@ -644,8 +644,8 @@ UNDEFED   __mpu_init
 20200000  __stop___llvm_prf_bits               
 20200000  __stop___llvm_prf_cnts               
 00001401  __subdf3                             
-00002401  __subsf3                             
-0000262d  __udivmoddi4                         
+00002409  __subsf3                             
+00002635  __udivmoddi4                         
 00003b2d  _c_int00_noargs                      
 UNDEFED   _system_post_cinit                   
 000042db  _system_pre_init                     
@@ -661,8 +661,8 @@ ffffffff  binit
 20200623  btn4_active                          
 202005d4  bujin_x                              
 00003e69  delay_ms                             
-00001cb9  dianji1_pulse_fast                   
-000026d1  dianji_set_origin                    
+00001cc1  dianji1_pulse_fast                   
+000026d9  dianji_set_origin                    
 202005d5  dir_x                                
 0000305d  frexp                                
 0000305d  frexpl                               
@@ -670,16 +670,16 @@ ffffffff  binit
 2020053c  gK230Backup                          
 0000394d  get_key_state                        
 00000000  interruptVectors                     
-00002585  key6_init                            
-00002329  ldexp                                
-00002329  ldexpl                               
+0000258d  key6_init                            
+00002331  ldexp                                
+00002331  ldexpl                               
 00000a91  main                                 
 00003c31  memccpy                              
 20200610  motor_angle                          
 20200614  motor_pulse                          
 2020060a  motor_target                         
 00001595  pid_compute                          
-00002a99  pid_control_init                     
+00002c6d  pid_control_init                     
 00003c0d  pid_get_params                       
 000042c1  pid_reset_state                      
 2020062a  pid_timer_tick                       
@@ -687,8 +687,8 @@ ffffffff  binit
 00003cb5  pid_tune_ki                          
 00003cd5  pid_tune_kp                          
 202005ca  pulse_x                              
-00002329  scalbn                               
-00002329  scalbnl                              
+00002331  scalbn                               
+00002331  scalbnl                              
 000038ad  sprintf                              
 00004209  wcslen                               
 
@@ -718,45 +718,45 @@ address   name
 0000140b  __aeabi_dadd                         
 00001593  __aeabi_idiv0                        
 00001595  pid_compute                          
-000016f5  OLED_ShowChar                        
-00001aa9  __aeabi_ddiv                         
-00001aa9  __divdf3                             
-00001bb5  DL_Timer_initFourCCPWMMode           
-00001cb9  dianji1_pulse_fast                   
-00001dbd  OLED_Init                            
-00001eb5  SYSCFG_DL_GPIO_init                  
-00001fa9  SYSCFG_DL_SYSCTL_SYSPLL_init         
-00002091  __aeabi_dmul                         
-00002091  __muldf3                             
-00002175  DL_SYSCTL_configSYSPLL               
-00002251  PID_Pos_Calc                         
-00002329  ldexp                                
-00002329  ldexpl                               
-00002329  scalbn                               
-00002329  scalbnl                              
-00002401  __aeabi_fsub                         
-00002401  __subsf3                             
-0000240b  __addsf3                             
-0000240b  __aeabi_fadd                         
-000024d9  UART3_IRQHandler                     
-00002585  key6_init                            
-0000262d  __udivmoddi4                         
-000026cf  __aeabi_ldiv0                        
-000026d1  dianji_set_origin                    
-0000276d  OLED_ShowString                      
-00002805  SYSCFG_DL_initPower                  
-00002891  __aeabi_fmul                         
-00002891  __mulsf3                             
-0000291d  __aeabi_fdiv                         
-0000291d  __divsf3                             
-000029a1  OLED_Refresh                         
-00002a1d  __TI_decompress_lzss                 
-00002a99  pid_control_init                     
-00002b11  OLED_WR_Byte                         
-00002b85  SYSCFG_DL_SYSCTL_init                
-00002bf9  __gedf2                              
-00002bf9  __gtdf2                              
-00002c6d  SYSCFG_DL_DCC_PWM_init               
+000016fd  OLED_ShowChar                        
+00001ab1  __aeabi_ddiv                         
+00001ab1  __divdf3                             
+00001bbd  DL_Timer_initFourCCPWMMode           
+00001cc1  dianji1_pulse_fast                   
+00001dc5  OLED_Init                            
+00001ebd  SYSCFG_DL_GPIO_init                  
+00001fb1  SYSCFG_DL_SYSCTL_SYSPLL_init         
+00002099  __aeabi_dmul                         
+00002099  __muldf3                             
+0000217d  DL_SYSCTL_configSYSPLL               
+00002259  PID_Pos_Calc                         
+00002331  ldexp                                
+00002331  ldexpl                               
+00002331  scalbn                               
+00002331  scalbnl                              
+00002409  __aeabi_fsub                         
+00002409  __subsf3                             
+00002413  __addsf3                             
+00002413  __aeabi_fadd                         
+000024e1  UART3_IRQHandler                     
+0000258d  key6_init                            
+00002635  __udivmoddi4                         
+000026d7  __aeabi_ldiv0                        
+000026d9  dianji_set_origin                    
+00002775  OLED_ShowString                      
+0000280d  SYSCFG_DL_initPower                  
+00002899  __aeabi_fmul                         
+00002899  __mulsf3                             
+00002925  __aeabi_fdiv                         
+00002925  __divsf3                             
+000029a9  OLED_Refresh                         
+00002a25  __TI_decompress_lzss                 
+00002aa1  OLED_WR_Byte                         
+00002b15  SYSCFG_DL_SYSCTL_init                
+00002b89  __gedf2                              
+00002b89  __gtdf2                              
+00002bfd  SYSCFG_DL_DCC_PWM_init               
+00002c6d  pid_control_init                     
 00002cdd  __cmpdf2                             
 00002cdd  __eqdf2                              
 00002cdd  __ledf2                              
