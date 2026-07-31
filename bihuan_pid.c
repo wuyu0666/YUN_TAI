@@ -61,3 +61,41 @@ float PID_Inc_Calc(PID_Inc_t *pid, float target, float feedback)
 
     return pid->output;
 }
+
+/* ===== 位置式 PID（TASK2 风格） ===== */
+
+#define PID_POS_DT_S 0.01f   /* 固定采样周期 10ms，与 TASK2 一致 */
+
+void PID_Pos_Init(PID_Pos_t *pid, float kp, float ki, float kd, float output_limit)
+{
+    pid->kp = kp;
+    pid->ki = ki;
+    pid->kd = kd;
+    pid->integral = 0.0f;
+    pid->previous_error = 0.0f;
+    pid->output_limit = output_limit;
+    pid->initialized = 0U;
+}
+
+float PID_Pos_Calc(PID_Pos_t *pid, float error)
+{
+    float derivative = 0.0f;   /* 首拍不计算微分 */
+    float output;
+
+    if (pid->initialized != 0U) {
+        derivative = (error - pid->previous_error) / PID_POS_DT_S;
+    } else {
+        pid->initialized = 1U;
+    }
+    pid->integral += error * PID_POS_DT_S;
+    output = pid->kp * error + pid->ki * pid->integral + pid->kd * derivative;
+    pid->previous_error = error;
+
+    /* 输出对称限幅 */
+    if (output > pid->output_limit) {
+        output = pid->output_limit;
+    } else if (output < -pid->output_limit) {
+        output = -pid->output_limit;
+    }
+    return output;
+}

@@ -10,7 +10,27 @@ volatile uint8_t btn4_active = 0;
 volatile uint8_t pid_timer_tick = 0;
 
 /* ---- PID 闂幆瀹炰緥锛屼富寰幆璁块棶 ---- */
-static PID_Inc_t pid_x;
+/* ===== 双环 PID（TASK2 式：位置环 + 速度环） ===== */
+
+/* 输出方向反转开关：1=反向（硬件方向相反时打开，默认 0） */
+#define PID_OUTPUT_REVERSE 0U
+/* 位置环：误差输入限幅（像素） */
+#define PID_POS_INPUT_LIMIT_PX 60.0f
+/* 位置环 / 合成输出限幅（角度） */
+#define PID_POS_OUTPUT_LIMIT_DEG 100.0f
+/* 速度环输出限幅（角度） */
+#define PID_VEL_OUTPUT_LIMIT_DEG 90.0f
+/* 位置误差死区（像素）：死区内清零双环状态并停机 */
+#define PID_DEADBAND_PX 5.0f
+
+/* 位置环 PID 实例（按键调参与 OLED 显示都读它） */
+static PID_Pos_t s_pos_pid;
+/* 速度环 PID 实例 */
+static PID_Pos_t s_vel_pid;
+/* 速度估算状态：上一帧误差、是否已记录、球速（像素/帧） */
+static float   s_prev_error;
+static uint8_t s_has_prev_error;
+static float   s_ball_velocity;
 
 /*
  * 瀹氭椂鍣ㄥ垎棰? DCC_PWM 711Hz / 7 鈮?100Hz
@@ -20,28 +40,39 @@ static uint8_t pid_tick_cnt = 0;
 
 void pid_control_init(void)
 {
-    PID_Inc_Init(&pid_x, 0.3f, 0.01f, 0.5f, 5.0f, 6000.0f, -6000.0f);
-    pid_x.alpha = 0.3f;
+    PID_Pos_Init(&s_pos_pid, 0.227f, 0.4f, 16.4f, PID_POS_OUTPUT_LIMIT_DEG);
+    PID_Pos_Init(&s_vel_pid, 1.8f, 0.1f, 1.0f, PID_VEL_OUTPUT_LIMIT_DEG);
+    s_prev_error = 0.0f;
+    s_has_prev_error = 0U;
+    s_ball_velocity = 0.0f;
     pid_tick_cnt = 0;
     pid_timer_tick = 0;
 }
 
-void pid_reset_state(void)
+/* 复位双环 PID 状态（保留已调好的增益） */
+static void pid_pos_reset_all(void)
 {
-    pid_x.error[0] = 0.0f;
-    pid_x.error[1] = 0.0f;
-    pid_x.error[2] = 0.0f;
-    pid_x.deriv_out_prev = 0.0f;
-    pid_x.output = 0.0f;
+    PID_Pos_Init(&s_pos_pid, s_pos_pid.kp, s_pos_pid.ki, s_pos_pid.kd,
+                 PID_POS_OUTPUT_LIMIT_DEG);
+    PID_Pos_Init(&s_vel_pid, s_vel_pid.kp, s_vel_pid.ki, s_vel_pid.kd,
+                 PID_VEL_OUTPUT_LIMIT_DEG);
+    s_prev_error = 0.0f;
+    s_has_prev_error = 0U;
+    s_ball_velocity = 0.0f;
 }
 
-void pid_tune_kp(float delta) { pid_x.Kp += delta; }
-void pid_tune_ki(float delta) { pid_x.Ki += delta; }
-void pid_tune_kd(float delta) { pid_x.Kd += delta; }
-void  pid_get_params(float *kp, float *ki, float *kd) { *kp = pid_x.Kp; *ki = pid_x.Ki; *kd = pid_x.Kd; }
-float pid_get_kp(void)  { return pid_x.Kp; }
-float pid_get_ki(void)  { return pid_x.Ki; }
-float pid_get_kd(void)  { return pid_x.Kd; }
+void pid_reset_state(void)
+{
+    pid_pos_reset_all();
+}
+
+void pid_tune_kp(float delta) { s_pos_pid.kp += delta; }
+void pid_tune_ki(float delta) { s_pos_pid.ki += delta; }
+void pid_tune_kd(float delta) { s_pos_pid.kd += delta; }
+void  pid_get_params(float *kp, float *ki, float *kd) { *kp = s_pos_pid.kp; *ki = s_pos_pid.ki; *kd = s_pos_pid.kd; }
+float pid_get_kp(void)  { return s_pos_pid.kp; }
+float pid_get_ki(void)  { return s_pos_pid.ki; }
+float pid_get_kd(void)  { return s_pos_pid.kd; }
 
 /**
  * @brief  涓诲惊鐜皟鐢?PID 璁＄畻锛岃繑鍥?motor delta
@@ -51,19 +82,58 @@ float pid_get_kd(void)  { return pid_x.Kd; }
  */
 int32_t pid_compute(float feedback, float *prev_out)
 {
-    if (feedback < pid_x.deadband && feedback > -pid_x.deadband) {
-        *prev_out = pid_x.output;
-        pid_x.error[0] = 0.0f;
-        pid_x.error[1] = 0.0f;
-        pid_x.error[2] = 0.0f;
-        pid_x.deriv_out_prev = 0.0f;
+    float pos_error;   /* 位置环误差（像素，限幅后） */
+    float pos_out;     /* 位置环输出（角度） */
+    float vel_out;     /* 速度环输出（角度） */
+    float out_deg;     /* 合成输出（角度） */
+    float out_pulse;   /* 换算后的输出（脉冲） */
+    int32_t delta;     /* 与上次输出的差值（脉冲） */
+
+    /* 死区：误差足够小视为到位，清零双环状态，电机停止 */
+    if (feedback < PID_DEADBAND_PX && feedback > -PID_DEADBAND_PX) {
+        pid_pos_reset_all();
         return 0;
     }
 
-    float out_x = PID_Inc_Calc(&pid_x, 0.0f, feedback);
-    int32_t delta = (int32_t)(out_x - *prev_out
-        + ((out_x >= *prev_out) ? 0.5f : -0.5f));
-    *prev_out = out_x;
+    /* 速度估算：球速 = 上一帧误差 - 当前帧误差（误差=目标-实时，等价于实时位置差） */
+    if (s_has_prev_error != 0U) {
+        s_ball_velocity = s_prev_error - feedback;
+    } else {
+        s_ball_velocity = 0.0f;   /* 首帧只记录，不计算速度 */
+        s_has_prev_error = 1U;
+    }
+    s_prev_error = feedback;
+
+    /* 位置环：误差限幅 ±60px 后进 PID，输出角度 */
+    pos_error = feedback;
+    if (pos_error > PID_POS_INPUT_LIMIT_PX) {
+        pos_error = PID_POS_INPUT_LIMIT_PX;
+    } else if (pos_error < -PID_POS_INPUT_LIMIT_PX) {
+        pos_error = -PID_POS_INPUT_LIMIT_PX;
+    }
+    pos_out = PID_Pos_Calc(&s_pos_pid, pos_error);
+
+    /* 速度环：目标球速 0，球滚得越快反向抵消越大（刹车） */
+    vel_out = PID_Pos_Calc(&s_vel_pid, s_ball_velocity);
+
+    /* 合成：位置环定方向，速度环作刹车，再限幅（角度） */
+    out_deg = pos_out - vel_out;
+    if (out_deg > PID_POS_OUTPUT_LIMIT_DEG) {
+        out_deg = PID_POS_OUTPUT_LIMIT_DEG;
+    } else if (out_deg < -PID_POS_OUTPUT_LIMIT_DEG) {
+        out_deg = -PID_POS_OUTPUT_LIMIT_DEG;
+    }
+
+    /* 角度 -> 脉冲 */
+    out_pulse = out_deg * jiaodu;
+    if (PID_OUTPUT_REVERSE != 0U) {
+        out_pulse = -out_pulse;
+    }
+
+    /* 差值输出：电机位置跟踪 out_pulse（等价于 TASK2 的绝对角度输出） */
+    delta = (int32_t)(out_pulse - *prev_out
+        + ((out_pulse >= *prev_out) ? 0.5f : -0.5f));
+    *prev_out = out_pulse;
     return delta;
 }
 
