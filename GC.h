@@ -1,4 +1,4 @@
-#ifndef __GC_H
+﻿#ifndef __GC_H
 #define __GC_H
 
 /**
@@ -47,4 +47,7 @@ extern volatile uint16_t pulse_x;
 extern volatile int32_t motor_angle;   /* 电机当前累计角度（度） */
 extern volatile int32_t motor_pulse;   /* 电机当前累计脉冲数 */
 extern volatile int16_t motor_target;  /* 目标角度（钳位前） */
+
+/* 100Hz PID 节拍：ISR 置位，主循环清零 */
+extern volatile uint8_t pid_timer_tick;
 #endif
