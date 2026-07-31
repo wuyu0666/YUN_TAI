@@ -87,14 +87,15 @@ int32_t pid_compute(float feedback, float *prev_out)
         return 0;
     }
 
-    /* 速度估算：球速 = 上一帧误差 - 当前帧误差（误差=目标-实时，等价于实时位置差） */
-    if (s_has_prev_error != 0U) {
-        s_ball_velocity = s_prev_error - feedback;
-    } else {
-        s_ball_velocity = 0.0f;   /* 首帧只记录，不计算速度 */
+    /* 速度估算：只有误差变化（收到新帧）才更新球速；
+     * 帧间误差不变时保持上次球速，保证刹车持续有效（同 TASK2） */
+    if (s_has_prev_error == 0U) {
+        s_prev_error = feedback;      /* 首帧只记录，不算速度 */
         s_has_prev_error = 1U;
+    } else if (feedback != s_prev_error) {
+        s_ball_velocity = s_prev_error - feedback;
+        s_prev_error = feedback;
     }
-    s_prev_error = feedback;
 
     /* 位置环：误差限幅 ±60px 后进 PID，输出角度 */
     pos_error = feedback;

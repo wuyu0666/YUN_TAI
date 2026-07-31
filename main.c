@@ -2,7 +2,6 @@
 
 /* ----- 反馈丢失超时参数 ----- */
 #define FB_LOST_THRESHOLD  50      /* 无反馈超时阈值（主循环迭代次数，约500ms） */
-#define FALLBACK_KP        0.35f   /* 丢失反馈时的比例系数（保守值，避免过冲） */
 
 #include "GC.h"
 
@@ -36,7 +35,6 @@ int main(void)
     float   pprev  = 0.0f;
     int32_t pout   = 0;
     int16_t perr   = 0;
-    uint8_t hasfb  = 0;
     int16_t  last_perr_saved = 0;   /* 保存最后一次有效偏差值 */
     uint8_t  last_perr_valid = 0;   /* 是否有有效的上次偏差 */
     uint16_t no_fb_cnt       = 0;   /* 无反馈计数 */
@@ -44,29 +42,30 @@ int main(void)
     while (1)
     {
 #if MOTOR_CONNECTED
+        /* 接收新帧：只更新误差输入，驱动交给下方固定节拍 */
         if (bujin_x == 1)
         {
-            float fb = (dir_x == 0x01) ? (float)pulse_x : -(float)pulse_x;
             perr  = (int16_t)((dir_x == 0x01) ? (int16_t)pulse_x : -(int16_t)pulse_x);
-            hasfb = 1;
             last_perr_saved = perr;   /* 保存最后一次有效偏差 */
             last_perr_valid = 1;
             no_fb_cnt = 0;            /* 重置丢失计数 */
-
-            int32_t d = pid_compute(fb, &pprev);
-            pout = (int32_t)pprev;
-            if (d != 0) { dianji1_pulse_fast(d); motor_pulse += d; }
             bujin_x = 0;
         }
         else
         {
-            /* 无新反馈，累加丢失计数 */
+            /* 无新反馈，累加丢失计数（仅用于 OLED 显示 LOST） */
             if (no_fb_cnt < 0xFFFF) no_fb_cnt++;
+        }
 
-            /* 丢失反馈超时，使用上次保存的偏差值继续驱动电机 */
-            if (no_fb_cnt >= FB_LOST_THRESHOLD && last_perr_valid) {
-                int32_t d = (int32_t)(FALLBACK_KP * (float)last_perr_saved);
-                pout = (int32_t)d;
+        /* 固定节拍执行 PID：有新帧用新误差，没新帧沿用上次误差
+         * 持续修正，球静止不发帧时也能继续推，到位后死区内停机 */
+        if (pid_timer_tick != 0U)
+        {
+            pid_timer_tick = 0U;
+            if (last_perr_valid)
+            {
+                int32_t d = pid_compute((float)last_perr_saved, &pprev);
+                pout = (int32_t)pprev;
                 if (d != 0) { dianji1_pulse_fast(d); motor_pulse += d; }
             }
         }
